@@ -8,6 +8,7 @@ namespace datatools.datamaker
 {
 	public class DataSchema
 	{
+		public string Name { get; set; }
 		private List<SchemaElement> elements = new List<SchemaElement>();
 		internal IList<SchemaElement> Elements { get { return elements; } }
 
