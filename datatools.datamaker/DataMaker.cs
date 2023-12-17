@@ -6,6 +6,14 @@ namespace datatools.datamaker
 	{
 		static Random rand = new Random();
 
+		/// <summary>
+		/// Produces a valid random string where the requirements
+		/// for the data string are described in the DataSchema object
+		/// passed to the method.
+		/// </summary>
+		/// <param name="schema">Describes the requirements for a valid data object.</param>
+		/// <returns>A random string that is valid according to the schema.</returns>
+		/// <exception cref="ArgumentException">In the case where any element in schema is invalid.</exception>
 		public static string GetRandomExample(DataSchema schema)
 		{
 			string result = string.Empty;
