@@ -12,6 +12,10 @@ namespace datatools.datamaker
 
 			foreach(SchemaElement element in schema.Elements)
 			{
+				if(!SchemaElement.IsValidElement(element))
+				{
+					throw new ArgumentException($"Element is invalid: {element.Name}");
+				}
 				result = EvaluateElement(result, element);
 			}
 

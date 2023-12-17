@@ -13,6 +13,18 @@ namespace datatools.datamaker
 		public object MinValue { get; set; }
 		public object MaxValue { get; set; }
 		public ElementType Type { get; set; }
+
+		public static bool IsValidElement(SchemaElement element)
+		{
+			if(element.Type.Equals(ElementType.RangeNumeric))
+			{
+				if (((int)element.MinValue) > ((int)element.MaxValue))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
 	public enum ElementType

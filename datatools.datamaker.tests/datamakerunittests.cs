@@ -212,6 +212,22 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
+		[ExpectedException(typeof(ArgumentException))]
+		public void GetRandomExample_rangenumericcrossvalues()
+		{
+			DataSchema schema = new DataSchema();
+			schema.AddElement(new SchemaElement()
+			{
+				Name = "element1",
+				MinValue = 3,
+				MaxValue = 2,
+				Type = ElementType.RangeNumeric
+			}
+			);
+			string result = DataMaker.GetRandomExample(schema);
+		}
+
+		[TestMethod]
 		public void GetRandomExample_singlestaticvalue()
 		{
 			DataSchema schema = new DataSchema();
