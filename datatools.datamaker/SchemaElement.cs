@@ -18,11 +18,23 @@ namespace datatools.datamaker
 		{
 			if(element.Type.Equals(ElementType.RangeNumeric))
 			{
+				if(element.MinValue == null || element.MaxValue == null)
+				{
+					return false;
+				}
 				if (((int)element.MinValue) > ((int)element.MaxValue))
 				{
 					return false;
 				}
 			}
+			else
+			{
+				if(element.Value == null)
+				{
+					return false;
+				}
+			}
+
 			return true;
 		}
 	}
