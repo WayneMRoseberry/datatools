@@ -4,7 +4,6 @@ namespace datatools.datamaker
 {
 	public class DataMaker
 	{
-		static Random rand = new Random();
 
 		/// <summary>
 		/// Produces a valid random string where the requirements
@@ -14,7 +13,7 @@ namespace datatools.datamaker
 		/// <param name="schema">Describes the requirements for a valid data object.</param>
 		/// <returns>A random string that is valid according to the schema.</returns>
 		/// <exception cref="ArgumentException">In the case where any element in schema is invalid.</exception>
-		public static string GetRandomExample(DataSchema schema)
+		public static string GetExample(DataSchema schema, IChooser chooser)
 		{
 			string result = string.Empty;
 
@@ -24,30 +23,31 @@ namespace datatools.datamaker
 				{
 					throw new ArgumentException($"Element is invalid: {element.Name}");
 				}
-				result = EvaluateElement(result, element);
+				result = EvaluateElement(result, element, chooser);
 			}
 
 			return result;
 		}
 
-		private static string EvaluateElement(string result, SchemaElement element)
+		private static string EvaluateElement(string result, SchemaElement element, IChooser chooser)
 		{
 			if(element.Type.Equals(ElementType.StaticValue))
 			{
-				result = result + GetElementValue(element);
+				result = result + GetElementValue(element, chooser);
 			}
 			if (element.Type.Equals(ElementType.Choice))
 			{
 				SchemaElement[] elements = (SchemaElement[])element.Value;
-				int chosen = rand.Next(elements.Length);
-				result = EvaluateElement(result, elements[chosen]);
+				int length = elements.Length;
+				int chosen = chooser.ChooseNumber(length);
+				result = EvaluateElement(result, elements[chosen], chooser);
 			}
 			if (element.Type.Equals(ElementType.Optional))
 			{
-				int coinflip = rand.Next(2);
+				int coinflip = chooser.ChooseNumber(2);
 				if(coinflip > 0)
 				{
-					result = result + GetElementValue(element);
+					result = result + GetElementValue(element, chooser);
 				}
 			}
 			if (element.Type.Equals(ElementType.ElementList))
@@ -55,20 +55,20 @@ namespace datatools.datamaker
 				SchemaElement[] elements = (SchemaElement[])element.Value;
 				foreach (SchemaElement e in elements)
 				{
-					result = EvaluateElement(result, e);
+					result = EvaluateElement(result, e, chooser);
 				}
 			}
 			if (element.Type.Equals(ElementType.RangeNumeric))
 			{
 				int min = (int) element.MinValue;
 				int max = (int) element.MaxValue;
-				int number = min + rand.Next((max - min) +1);
+				int number = min + chooser.ChooseNumber((max - min) +1);
 				result = result + number.ToString();
 			}
 			return result;
 		}
 
-		private static string? GetElementValue(SchemaElement element)
+		private static string? GetElementValue(SchemaElement element, IChooser chooser)
 		{
 			if(element.Value.GetType().Equals(typeof(string)))
 			{
@@ -81,12 +81,12 @@ namespace datatools.datamaker
 				string result = string.Empty;
 				foreach(SchemaElement e in elements)
 				{
-					result = EvaluateElement(result, e);
+					result = EvaluateElement(result, e, chooser);
 				}
 				return result;
 			}
 
-			return EvaluateElement(string.Empty, (SchemaElement) element.Value);
+			return EvaluateElement(string.Empty, (SchemaElement) element.Value, chooser);
 		}
 	}
 }

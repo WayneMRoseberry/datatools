@@ -27,7 +27,7 @@ namespace datatools.datamaker.tests
 			};
 			schema.AddElement(element);
 
-			string result = DataMaker.GetRandomExample(schema);
+			string result = DataMaker.GetExample(schema, new RandomChooser());
 
 			Assert.IsTrue(result.Equals("ch1") || result.Equals("ch2"), $"Fail if result <> 'ch1' or 'ch2', result={result}");
 		}
@@ -57,7 +57,7 @@ namespace datatools.datamaker.tests
 			for(int i =0; i < 40; i++)
 			{
 
-				string result = DataMaker.GetRandomExample(schema);
+				string result = DataMaker.GetExample(schema, new RandomChooser());
 				if(!results.Contains(result))
 				{
 					results.Add(result);
@@ -90,7 +90,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetRandomExample(schema);
+			string result = DataMaker.GetExample(schema, new RandomChooser());
 
 			Assert.AreEqual("mefirst_melast", result);
 		}
@@ -117,7 +117,7 @@ namespace datatools.datamaker.tests
 			List<string> results = new List<string>();
 			for(int i = 0; i < 50; i++)
 			{
-				string result = DataMaker.GetRandomExample(schema);
+				string result = DataMaker.GetExample(schema, new RandomChooser());
 				if(!results.Contains(result))
 				{
 					results.Add(result);
@@ -166,7 +166,7 @@ namespace datatools.datamaker.tests
 			List<string> results = new List<string>();
 			for (int i = 0; i < 50; i++)
 			{
-				string result = DataMaker.GetRandomExample(schema);
+				string result = DataMaker.GetExample(schema, new RandomChooser());
 				if (!results.Contains(result))
 				{
 					results.Add(result);
@@ -198,7 +198,7 @@ namespace datatools.datamaker.tests
 			List<int> results = new List<int>();
 			for(int i = 0; i < 100; i++)
 			{
-				int numeric = Convert.ToInt32(DataMaker.GetRandomExample(schema));
+				int numeric = Convert.ToInt32(DataMaker.GetExample(schema, new RandomChooser()));
 				if(!results.Contains(numeric))
 				{
 					results.Add(numeric);
@@ -224,7 +224,7 @@ namespace datatools.datamaker.tests
 				Type = ElementType.RangeNumeric
 			}
 			);
-			string result = DataMaker.GetRandomExample(schema);
+			string result = DataMaker.GetExample(schema, new RandomChooser());
 		}
 
 		[TestMethod]
@@ -239,7 +239,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetRandomExample( schema );
+			string result = DataMaker.GetExample( schema, new RandomChooser());
 
 			Assert.AreEqual("val1", result);
 		}
@@ -263,7 +263,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetRandomExample(schema);
+			string result = DataMaker.GetExample(schema, new RandomChooser());
 
 			Assert.AreEqual("val1val2", result);
 		}
