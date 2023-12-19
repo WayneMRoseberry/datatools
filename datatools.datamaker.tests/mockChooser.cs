@@ -2,11 +2,13 @@
 
 namespace datatools.datamaker.tests
 {
-	internal class mockChooser : IChooser
+	internal class MockChooser : IChooser
 	{
+		public Func<int, int> overrideChooseNumber = (length) => { throw new NotImplementedException(); };
+
 		public int ChooseNumber(int length)
 		{
-			throw new NotImplementedException();
+			return this.overrideChooseNumber(length);
 		}
 	}
 }

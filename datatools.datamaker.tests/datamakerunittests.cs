@@ -9,7 +9,7 @@ namespace datatools.datamaker.tests
 	{
 
 		[TestMethod]
-		public void GetRandomExample_choicetwovalues()
+		public void GetExample_choicetwovalues_randomchooser()
 		{
 			DataSchema schema = new DataSchema();
 
@@ -33,7 +33,39 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_choicefourvalues()
+		public void GetExample_choicetwovalues_mockchooser()
+		{
+
+			int passedInLength = -1;
+			MockChooser mockChooser = new MockChooser();
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 0; };
+
+			DataSchema schema = new DataSchema();
+
+			SchemaElement[] elemArray = new SchemaElement[]
+			{
+				new SchemaElement () { Name="choice1", Value="ch1", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice2", Value="ch2", Type=ElementType.StaticValue}
+			};
+
+			SchemaElement element = new SchemaElement()
+			{
+				Name = "element1",
+				Value = elemArray,
+				Type = ElementType.Choice
+			};
+			schema.AddElement(element);
+
+			Assert.AreEqual("ch1", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not expected choice.");
+			Assert.AreEqual(2, passedInLength, "Fail if wrong length passed in to ChooseNumber.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
+			Assert.AreEqual("ch2", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not expected choice.");
+			Assert.AreEqual(2, passedInLength, "Fail if wrong length passed in to ChooseNumber.");
+
+		}
+
+		[TestMethod]
+		public void GetExample_choicefourvalues()
 		{
 			DataSchema schema = new DataSchema();
 
@@ -72,7 +104,7 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_elementlist()
+		public void GetExample_elementlist()
 		{
 			DataSchema schema = new DataSchema();
 
@@ -96,7 +128,7 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_optional()
+		public void GetExample_optional_randomChooser()
 		{
 			DataSchema schema = new DataSchema();
 
@@ -133,7 +165,35 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_optionalelementlist()
+		public void GetExample_optional_mockChooser()
+		{
+			int passedInLength = -1;
+			MockChooser mockChooser = new MockChooser();
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 0; };
+			DataSchema schema = new DataSchema();
+
+			schema.AddElement(new SchemaElement()
+			{
+				Name = "prefix",
+				Value = "firstpart",
+				Type = ElementType.StaticValue
+			});
+			schema.AddElement(new SchemaElement()
+			{
+				Name = "optionalpostfix",
+				Value = "secondoption",
+				Type = ElementType.Optional
+			});
+
+			Assert.AreEqual("firstpart", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual(2, passedInLength, "Fail if the length passed to ChooseNumber is not as expected.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
+			Assert.AreEqual("firstpartsecondoption", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual(2, passedInLength, "Fail if the length passed to ChooseNumber is not as expected.");
+		}
+
+		[TestMethod]
+		public void GetExample_optionalelementlist()
 		{
 			DataSchema schema = new DataSchema();
 
@@ -182,7 +242,7 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_rangenumeric()
+		public void GetExample_rangenumeric_randomchooser()
 		{
 			DataSchema schema = new DataSchema();
 			schema.AddElement(new SchemaElement()
@@ -212,8 +272,35 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
+		public void GetExample_rangenumeric_mockedChooser()
+		{
+			int passedInLength = -1;
+			MockChooser mockChooser = new MockChooser();
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 0; };
+
+			DataSchema schema = new DataSchema();
+			schema.AddElement(new SchemaElement()
+			{
+				Name = "element1",
+				MinValue = 3,
+				MaxValue = 5,
+				Type = ElementType.RangeNumeric
+			}
+			);
+
+			Assert.AreEqual("3", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
+			Assert.AreEqual("4", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 2; };
+			Assert.AreEqual("5", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+		}
+
+		[TestMethod]
 		[ExpectedException(typeof(ArgumentException))]
-		public void GetRandomExample_rangenumericcrossvalues()
+		public void GetExample_rangenumericcrossvalues()
 		{
 			DataSchema schema = new DataSchema();
 			schema.AddElement(new SchemaElement()
@@ -228,7 +315,7 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_singlestaticvalue()
+		public void GetExample_singlestaticvalue()
 		{
 			DataSchema schema = new DataSchema();
 			schema.AddElement(new SchemaElement() 
@@ -245,7 +332,7 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
-		public void GetRandomExample_twostaticvalues()
+		public void GetExample_twostaticvalues()
 		{
 			DataSchema schema = new DataSchema();
 			schema.AddElement(new SchemaElement()
