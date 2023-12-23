@@ -1,6 +1,4 @@
-﻿using System.Security.Authentication.ExtendedProtection;
-
-namespace datatools.datamaker
+﻿namespace datatools.datamaker
 {
 	public class DataMaker
 	{
@@ -13,7 +11,7 @@ namespace datatools.datamaker
 		/// <param name="schema">Describes the requirements for a valid data object.</param>
 		/// <returns>A random string that is valid according to the schema.</returns>
 		/// <exception cref="ArgumentException">In the case where any element in schema is invalid.</exception>
-		public static string GetExample(DataSchema schema, IChooser chooser)
+		public static string GetExample(DataSchema schema, IChooser chooser, ISchemaStore schemaStore)
 		{
 			string result = string.Empty;
 
@@ -23,31 +21,31 @@ namespace datatools.datamaker
 				{
 					throw new ArgumentException($"Element is invalid: {element.Name}");
 				}
-				result = EvaluateElement(result, element, chooser);
+				result = EvaluateElement(result, element, chooser, schemaStore);
 			}
 
 			return result;
 		}
 
-		private static string EvaluateElement(string result, SchemaElement element, IChooser chooser)
+		private static string EvaluateElement(string result, SchemaElement element, IChooser chooser, ISchemaStore schemaStore)
 		{
 			if(element.Type.Equals(ElementType.StaticValue))
 			{
-				result = result + GetElementValue(element, chooser);
+				result = result + GetElementValue(element, chooser, schemaStore);
 			}
 			if (element.Type.Equals(ElementType.Choice))
 			{
 				SchemaElement[] elements = (SchemaElement[])element.Value;
 				int length = elements.Length;
 				int chosen = chooser.ChooseNumber(length);
-				result = EvaluateElement(result, elements[chosen], chooser);
+				result = EvaluateElement(result, elements[chosen], chooser, schemaStore);
 			}
 			if (element.Type.Equals(ElementType.Optional))
 			{
 				int coinflip = chooser.ChooseNumber(2);
 				if(coinflip > 0)
 				{
-					result = result + GetElementValue(element, chooser);
+					result = result + GetElementValue(element, chooser, schemaStore);
 				}
 			}
 			if (element.Type.Equals(ElementType.ElementList))
@@ -55,7 +53,7 @@ namespace datatools.datamaker
 				SchemaElement[] elements = (SchemaElement[])element.Value;
 				foreach (SchemaElement e in elements)
 				{
-					result = EvaluateElement(result, e, chooser);
+					result = EvaluateElement(result, e, chooser, schemaStore);
 				}
 			}
 			if (element.Type.Equals(ElementType.RangeNumeric))
@@ -68,7 +66,7 @@ namespace datatools.datamaker
 			return result;
 		}
 
-		private static string? GetElementValue(SchemaElement element, IChooser chooser)
+		private static string? GetElementValue(SchemaElement element, IChooser chooser, ISchemaStore schemaStore)
 		{
 			if(element.Value.GetType().Equals(typeof(string)))
 			{
@@ -81,12 +79,12 @@ namespace datatools.datamaker
 				string result = string.Empty;
 				foreach(SchemaElement e in elements)
 				{
-					result = EvaluateElement(result, e, chooser);
+					result = EvaluateElement(result, e, chooser, schemaStore);
 				}
 				return result;
 			}
 
-			return EvaluateElement(string.Empty, (SchemaElement) element.Value, chooser);
+			return EvaluateElement(string.Empty, (SchemaElement) element.Value, chooser, schemaStore);
 		}
 	}
 }

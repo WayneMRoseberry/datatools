@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace datatools.datamaker
+﻿namespace datatools.datamaker
 {
 	public class SchemaElement
 	{
@@ -45,6 +39,7 @@ namespace datatools.datamaker
 		Choice,
 		Optional,
 		ElementList,
-		RangeNumeric
+		RangeNumeric,
+		Reference
 	}
 }

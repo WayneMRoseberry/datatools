@@ -27,7 +27,7 @@ namespace datatools.datamaker.tests
 			};
 			schema.AddElement(element);
 
-			string result = DataMaker.GetExample(schema, new RandomChooser());
+			string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 
 			Assert.IsTrue(result.Equals("ch1") || result.Equals("ch2"), $"Fail if result <> 'ch1' or 'ch2', result={result}");
 		}
@@ -56,10 +56,10 @@ namespace datatools.datamaker.tests
 			};
 			schema.AddElement(element);
 
-			Assert.AreEqual("ch1", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not expected choice.");
+			Assert.AreEqual("ch1", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not expected choice.");
 			Assert.AreEqual(2, passedInLength, "Fail if wrong length passed in to ChooseNumber.");
 			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
-			Assert.AreEqual("ch2", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not expected choice.");
+			Assert.AreEqual("ch2", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not expected choice.");
 			Assert.AreEqual(2, passedInLength, "Fail if wrong length passed in to ChooseNumber.");
 
 		}
@@ -89,7 +89,7 @@ namespace datatools.datamaker.tests
 			for(int i =0; i < 40; i++)
 			{
 
-				string result = DataMaker.GetExample(schema, new RandomChooser());
+				string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 				if(!results.Contains(result))
 				{
 					results.Add(result);
@@ -122,7 +122,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetExample(schema, new RandomChooser());
+			string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 
 			Assert.AreEqual("mefirst_melast", result);
 		}
@@ -149,7 +149,7 @@ namespace datatools.datamaker.tests
 			List<string> results = new List<string>();
 			for(int i = 0; i < 50; i++)
 			{
-				string result = DataMaker.GetExample(schema, new RandomChooser());
+				string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 				if(!results.Contains(result))
 				{
 					results.Add(result);
@@ -185,10 +185,10 @@ namespace datatools.datamaker.tests
 				Type = ElementType.Optional
 			});
 
-			Assert.AreEqual("firstpart", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual("firstpart", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
 			Assert.AreEqual(2, passedInLength, "Fail if the length passed to ChooseNumber is not as expected.");
 			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
-			Assert.AreEqual("firstpartsecondoption", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual("firstpartsecondoption", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
 			Assert.AreEqual(2, passedInLength, "Fail if the length passed to ChooseNumber is not as expected.");
 		}
 
@@ -226,7 +226,7 @@ namespace datatools.datamaker.tests
 			List<string> results = new List<string>();
 			for (int i = 0; i < 50; i++)
 			{
-				string result = DataMaker.GetExample(schema, new RandomChooser());
+				string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 				if (!results.Contains(result))
 				{
 					results.Add(result);
@@ -258,7 +258,7 @@ namespace datatools.datamaker.tests
 			List<int> results = new List<int>();
 			for(int i = 0; i < 100; i++)
 			{
-				int numeric = Convert.ToInt32(DataMaker.GetExample(schema, new RandomChooser()));
+				int numeric = Convert.ToInt32(DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore()));
 				if(!results.Contains(numeric))
 				{
 					results.Add(numeric);
@@ -288,13 +288,13 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			Assert.AreEqual("3", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual("3", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
 			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
 			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
-			Assert.AreEqual("4", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual("4", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
 			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
 			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 2; };
-			Assert.AreEqual("5", DataMaker.GetExample(schema, mockChooser), "Fail if returned string is not as expected.");
+			Assert.AreEqual("5", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
 			Assert.AreEqual(3, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
 		}
 
@@ -311,7 +311,7 @@ namespace datatools.datamaker.tests
 				Type = ElementType.RangeNumeric
 			}
 			);
-			string result = DataMaker.GetExample(schema, new RandomChooser());
+			string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 		}
 
 		[TestMethod]
@@ -326,7 +326,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetExample( schema, new RandomChooser());
+			string result = DataMaker.GetExample( schema, new RandomChooser(), new MockSchemaStore());
 
 			Assert.AreEqual("val1", result);
 		}
@@ -350,7 +350,7 @@ namespace datatools.datamaker.tests
 			}
 			);
 
-			string result = DataMaker.GetExample(schema, new RandomChooser());
+			string result = DataMaker.GetExample(schema, new RandomChooser(), new MockSchemaStore());
 
 			Assert.AreEqual("val1val2", result);
 		}

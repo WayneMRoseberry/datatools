@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace datatools.datamaker
+﻿namespace datatools.datamaker
 {
 	public class DataSchema
 	{
@@ -16,5 +10,11 @@ namespace datatools.datamaker
 		{
 			this.elements.Add(element);
 		}
+	}
+
+	public class DataSchemaReference
+	{
+		public string NameSpace { get; set; }
+		public string Name { get; set; }
 	}
 }
