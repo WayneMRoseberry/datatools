@@ -315,6 +315,83 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
+		public void GetExample_reference()
+		{
+			DataSchemaReference passedInReference = null;
+			MockSchemaStore schemaStore = new MockSchemaStore();
+			schemaStore.overrideGetSchemaElement = (d) =>
+			{
+				passedInReference = d;
+				DataSchema dataSchema = new DataSchema() { };
+				dataSchema.AddElement(new SchemaElement() { Name = "referencedme", Value = "this is me", Type = ElementType.StaticValue });
+				return dataSchema;
+			};
+			MockChooser mockChooser = new MockChooser();
+
+			SchemaElement schemaElement = new SchemaElement()
+			{
+				Name="testelem",
+				Value = new DataSchemaReference() { Name="testref", NameSpace="test.namespace"},
+				Type = ElementType.Reference
+			};
+			DataSchema inputSchema = new DataSchema();
+			inputSchema.AddElement(schemaElement);
+			string result = DataMaker.GetExample(inputSchema, mockChooser, schemaStore);
+
+			Assert.AreNotEqual(null, passedInReference, "Fail if passedInReference is null.");
+			Assert.AreEqual("testref", passedInReference.Name, "Fail if reference did not pass in expected name.");
+			Assert.AreEqual("test.namespace", passedInReference.NameSpace, "Fail if reference did not pass in expected namespace.");
+			Assert.AreEqual("this is me", result, "Fail if result is not expected value.");
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentException))]
+		public void GetExample_reference_notdataschemareference_in_value()
+		{
+			MockSchemaStore schemaStore = new MockSchemaStore();
+			MockChooser mockChooser = new MockChooser();
+
+			SchemaElement schemaElement = new SchemaElement()
+			{
+				Name = "testelem",
+				Value = "not a reference",
+				Type = ElementType.Reference
+			};
+			DataSchema inputSchema = new DataSchema();
+			inputSchema.AddElement(schemaElement);
+			string result = DataMaker.GetExample(inputSchema, mockChooser, schemaStore);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InfinitelyRecursiveSchemaException))]
+		public void GetExample_reference_circular_throws()
+		{
+			SchemaElement schemaElement = new SchemaElement()
+			{
+				Name = "testelem",
+				Value = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
+				Type = ElementType.Reference
+			};
+			MockSchemaStore schemaStore = new MockSchemaStore();
+			schemaStore.overrideGetSchemaElement = (d) =>
+			{
+				SchemaElement schemaElement2 = new SchemaElement()
+				{
+					Name = "testelem",
+					Value = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
+					Type = ElementType.Reference
+				};
+				DataSchema dataSchema = new DataSchema() { };
+				dataSchema.AddElement(schemaElement2);
+				return dataSchema;
+			};
+			MockChooser mockChooser = new MockChooser();
+			DataSchema inputSchema = new DataSchema();
+			inputSchema.AddElement(schemaElement);
+			string result = DataMaker.GetExample(inputSchema, mockChooser, schemaStore);
+		}
+
+		[TestMethod]
 		public void GetExample_singlestaticvalue()
 		{
 			DataSchema schema = new DataSchema();

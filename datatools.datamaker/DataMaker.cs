@@ -63,6 +63,11 @@
 				int number = min + chooser.ChooseNumber((max - min) +1);
 				result = result + number.ToString();
 			}
+			if (element.Type.Equals(ElementType.Reference))
+			{
+				DataSchema referencedSchema = schemaStore.GetSchemaElement((DataSchemaReference) element.Value);
+				result = result + GetExample(referencedSchema, chooser, schemaStore);
+			}
 			return result;
 		}
 
@@ -87,4 +92,6 @@
 			return EvaluateElement(string.Empty, (SchemaElement) element.Value, chooser, schemaStore);
 		}
 	}
+
+	public class InfinitelyRecursiveSchemaException : ArgumentException { }
 }

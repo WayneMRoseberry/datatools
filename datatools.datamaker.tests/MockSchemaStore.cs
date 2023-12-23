@@ -8,6 +8,8 @@ namespace datatools.datamaker.tests
 {
 	internal class MockSchemaStore : ISchemaStore
 	{
+		public Func<DataSchemaReference, DataSchema> overrideGetSchemaElement = (d) => { throw new NotImplementedException(); };
+
 		public void AddDataSchema(string nameSpace, DataSchema dataSchema)
 		{
 			throw new NotImplementedException();
@@ -15,7 +17,7 @@ namespace datatools.datamaker.tests
 
 		public DataSchema GetSchemaElement(DataSchemaReference schemaReference)
 		{
-			throw new NotImplementedException();
+			return overrideGetSchemaElement(schemaReference);
 		}
 	}
 }

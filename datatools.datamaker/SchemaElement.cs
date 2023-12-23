@@ -10,9 +10,9 @@
 
 		public static bool IsValidElement(SchemaElement element)
 		{
-			if(element.Type.Equals(ElementType.RangeNumeric))
+			if (element.Type.Equals(ElementType.RangeNumeric))
 			{
-				if(element.MinValue == null || element.MaxValue == null)
+				if (element.MinValue == null || element.MaxValue == null)
 				{
 					return false;
 				}
@@ -20,6 +20,10 @@
 				{
 					return false;
 				}
+			}
+			else if (element.Type.Equals(ElementType.Reference) && !element.Value.GetType().Equals(typeof(DataSchemaReference)))
+			{ 
+				return false;
 			}
 			else
 			{
