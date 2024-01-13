@@ -21,6 +21,17 @@
 					return false;
 				}
 			}
+			else if(element.Type.Equals(ElementType.RangeAlpha))
+			{
+				if (element.MinValue == null || element.MaxValue == null)
+				{
+					return false;
+				}
+				if (((char)element.MinValue) > ((char)element.MaxValue))
+				{
+					return false;
+				}
+			}
 			else if (element.Type.Equals(ElementType.Reference) && !element.Value.GetType().Equals(typeof(DataSchemaReference)))
 			{ 
 				return false;
@@ -44,6 +55,7 @@
 		Optional,
 		ElementList,
 		RangeNumeric,
-		Reference
+		Reference,
+		RangeAlpha
 	}
 }

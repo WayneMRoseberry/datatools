@@ -63,6 +63,13 @@
 				int number = min + chooser.ChooseNumber((max - min) +1);
 				result = result + number.ToString();
 			}
+			if (element.Type.Equals(ElementType.RangeAlpha))
+			{
+				int min = (char)element.MinValue;
+				int max = (char)element.MaxValue;
+				int number = min + chooser.ChooseNumber((max - min) + 1);
+				result = ((char) number).ToString();
+			}
 			if (element.Type.Equals(ElementType.Reference))
 			{
 				DataSchema referencedSchema = schemaStore.GetSchemaElement((DataSchemaReference) element.Value);

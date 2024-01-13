@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\datatools.datamaker.providers\datatools.datamaker.providers.csproj" />
+    <ProjectReference Include="..\datatools.datamaker\datatools.datamaker.csproj" />
+  </ItemGroup>
+
 </Project>

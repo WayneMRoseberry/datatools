@@ -2,9 +2,9 @@
 {
 	public class DataSchema
 	{
-		public string Name { get; set; }
+		public string SchemaName { get; set; }
 		private List<SchemaElement> elements = new List<SchemaElement>();
-		internal IList<SchemaElement> Elements { get { return elements; } }
+		public IList<SchemaElement> Elements { get { return elements; } }
 
 		public void AddElement(SchemaElement element) 
 		{

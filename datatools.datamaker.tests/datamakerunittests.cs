@@ -242,6 +242,33 @@ namespace datatools.datamaker.tests
 		}
 
 		[TestMethod]
+		public void GetExample_rangealpha_mockedChooser()
+		{
+			int passedInLength = -1;
+			MockChooser mockChooser = new MockChooser();
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 0; };
+
+			DataSchema schema = new DataSchema();
+			schema.AddElement(new SchemaElement()
+			{
+				Name = "element1",
+				MinValue = 'a',
+				MaxValue = 'z',
+				Type = ElementType.RangeAlpha
+			}
+			);
+
+			Assert.AreEqual("a", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
+			Assert.AreEqual(26, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 1; };
+			Assert.AreEqual("b", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
+			Assert.AreEqual(26, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+			mockChooser.overrideChooseNumber = (i) => { passedInLength = i; return 2; };
+			Assert.AreEqual("c", DataMaker.GetExample(schema, mockChooser, new MockSchemaStore()), "Fail if returned string is not as expected.");
+			Assert.AreEqual(26, passedInLength, "Fail if wrong range was passed to ChooseNumber.");
+		}
+
+		[TestMethod]
 		public void GetExample_rangenumeric_randomchooser()
 		{
 			DataSchema schema = new DataSchema();
