@@ -31,6 +31,12 @@
 				HasRequiredReferences = dataSchemaAssessment.HasRequiredReferences,
 				HasRequiredSelfReference = dataSchemaAssessment.HasRequiredSelfReference
 			};
+			if (element.Type.Equals(ElementType.StaticValue))
+			{
+				tempAssessment.FullyTerminating = true;
+				tempAssessment.HasOptionalReferences = false;
+				tempAssessment.HasRequiredReferences = false;
+			}
 			if (element.Type.Equals(ElementType.Reference))
 			{
 				tempAssessment.FullyTerminating = false;
@@ -39,6 +45,7 @@
 			if (element.Type.Equals(ElementType.Choice))
 			{
 				SchemaElement[] elements = (SchemaElement[]) element.Value;
+				int fullyTermCount = 0;
 				foreach(SchemaElement e in elements)
 				{
 					DataSchemaAssessment elementAssessment = AssessSchemaElement(tempAssessment, e);
@@ -46,6 +53,23 @@
 					{
 						tempAssessment.FullyTerminating = false;
 						tempAssessment.HasOptionalReferences = true;
+					}
+					else
+					{
+						fullyTermCount++;
+					}
+				}
+				if(!tempAssessment.FullyTerminating)
+				{
+					if(fullyTermCount > 0)
+					{
+						tempAssessment.HasRequiredReferences = false;
+						tempAssessment.HasOptionalReferences = true;
+					}
+					else
+					{
+						tempAssessment.HasRequiredReferences = true;
+						tempAssessment.HasOptionalSelfReference = false;
 					}
 				}
 			}
