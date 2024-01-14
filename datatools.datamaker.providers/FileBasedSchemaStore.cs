@@ -13,7 +13,7 @@ namespace datatools.datamaker.providers
 			if(System.IO.File.Exists(_schemaFilePath))
 			{
 				var file = System.IO.File.ReadAllText(_schemaFilePath);
-				_schemaDict = System.Text.Json.JsonSerializer.Deserialize<SchemaCollection>(file);
+				_schemaDict = SchemaCollection.LoadFromJson(file);
 			}
 			else
 			{
@@ -23,7 +23,7 @@ namespace datatools.datamaker.providers
 
 		private void WriteSchemaDictionaryToFile()
 		{
-			var schemaText = System.Text.Json.JsonSerializer.Serialize(this._schemaDict, new JsonSerializerOptions { WriteIndented = true });
+			var schemaText = SchemaCollection.GetJsonFromSchemaCollection(this._schemaDict);
 			System.IO.File.WriteAllText(_schemaFilePath, schemaText);
 		}
 
