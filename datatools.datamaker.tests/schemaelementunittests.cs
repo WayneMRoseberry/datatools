@@ -13,32 +13,12 @@ namespace datatools.datamaker.tests
 			SchemaElement schemaElement = new SchemaElement()
 			{
 				Name = "testelement",
-				MinValue = 3,
-				MaxValue = 1,
+				NumericMinValue = 3,
+				NumericMaxValue = 1,
 				Type = ElementType.RangeNumeric
 			};
 
 			Assert.IsFalse(SchemaElement.IsValidElement(schemaElement), "Fail if a crossed numeric range returns IsValidElement==true.");
-		}
-
-		[TestMethod]
-		public void IsValidElement_rangenumernullvalue()
-		{
-
-			Assert.IsFalse(SchemaElement.IsValidElement(new SchemaElement()
-			{
-				Name = "testelement",
-				MinValue = null,
-				MaxValue = 1,
-				Type = ElementType.RangeNumeric
-			}), "Fail if MinValue is null.");
-			Assert.IsFalse(SchemaElement.IsValidElement(new SchemaElement()
-			{
-				Name = "testelement",
-				MinValue = 3,
-				MaxValue = null,
-				Type = ElementType.RangeNumeric
-			}), "Fail if MaxValue is null.");
 		}
 
 		[TestMethod]
@@ -48,7 +28,7 @@ namespace datatools.datamaker.tests
 			Assert.IsFalse(SchemaElement.IsValidElement(new SchemaElement()
 			{
 				Name = "testelement",
-				Value = null,
+				StringValue = null,
 				Type = ElementType.StaticValue
 			}), "Fail if Value is null.");
 		}
@@ -60,7 +40,7 @@ namespace datatools.datamaker.tests
 			Assert.IsFalse(SchemaElement.IsValidElement(new SchemaElement()
 			{
 				Name = "testelement",
-				Value = null,
+				ElementValue = null,
 				Type = ElementType.Optional
 			}), "Fail if Value is null.");
 		}
@@ -72,7 +52,7 @@ namespace datatools.datamaker.tests
 			Assert.IsFalse(SchemaElement.IsValidElement(new SchemaElement()
 			{
 				Name = "testelement",
-				Value = null,
+				ElementListValue = null,
 				Type = ElementType.Choice
 			}), "Fail if Value is null.");
 		}

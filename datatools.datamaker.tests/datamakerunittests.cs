@@ -15,14 +15,14 @@ namespace datatools.datamaker.tests
 
 			SchemaElement[] elemArray = new SchemaElement[]
 			{
-				new SchemaElement () { Name="choice1", Value="ch1", Type=ElementType.StaticValue },
-				new SchemaElement () { Name="choice2", Value="ch2", Type=ElementType.StaticValue}
+				new SchemaElement () { Name="choice1", StringValue="ch1", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice2", StringValue="ch2", Type=ElementType.StaticValue}
 			};
 
 			SchemaElement element = new SchemaElement()
 			{
 				Name = "element1",
-				Value = elemArray,
+				ElementListValue = elemArray,
 				Type = ElementType.Choice
 			};
 			schema.AddElement(element);
@@ -44,14 +44,14 @@ namespace datatools.datamaker.tests
 
 			SchemaElement[] elemArray = new SchemaElement[]
 			{
-				new SchemaElement () { Name="choice1", Value="ch1", Type=ElementType.StaticValue },
-				new SchemaElement () { Name="choice2", Value="ch2", Type=ElementType.StaticValue}
+				new SchemaElement () { Name="choice1", StringValue="ch1", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice2", StringValue="ch2", Type=ElementType.StaticValue}
 			};
 
 			SchemaElement element = new SchemaElement()
 			{
 				Name = "element1",
-				Value = elemArray,
+				ElementListValue = elemArray,
 				Type = ElementType.Choice
 			};
 			schema.AddElement(element);
@@ -71,16 +71,16 @@ namespace datatools.datamaker.tests
 
 			SchemaElement[] elemArray = new SchemaElement[]
 			{
-				new SchemaElement () { Name="choice1", Value="ch1", Type=ElementType.StaticValue },
-				new SchemaElement () { Name="choice2", Value="ch2", Type=ElementType.StaticValue },
-				new SchemaElement () { Name="choice3", Value="ch3", Type=ElementType.StaticValue },
-				new SchemaElement () { Name="choice4", Value="ch4", Type=ElementType.StaticValue }
+				new SchemaElement () { Name="choice1", StringValue="ch1", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice2", StringValue="ch2", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice3", StringValue="ch3", Type=ElementType.StaticValue },
+				new SchemaElement () { Name="choice4", StringValue="ch4", Type=ElementType.StaticValue }
 			};
 
 			SchemaElement element = new SchemaElement()
 			{
 				Name = "element1",
-				Value = elemArray,
+				ElementListValue = elemArray,
 				Type = ElementType.Choice
 			};
 			schema.AddElement(element);
@@ -110,14 +110,14 @@ namespace datatools.datamaker.tests
 
 			SchemaElement[] elementList = new SchemaElement[] 
 			{
-				new SchemaElement() { Name="firstthing", Value="mefirst", Type=ElementType.StaticValue },
-				new SchemaElement() { Name="separator", Value="_", Type=ElementType.StaticValue},
-				new SchemaElement() { Name="secondthing", Value="melast", Type=ElementType.StaticValue}
+				new SchemaElement() { Name="firstthing", StringValue="mefirst", Type=ElementType.StaticValue },
+				new SchemaElement() { Name="separator", StringValue="_", Type=ElementType.StaticValue},
+				new SchemaElement() { Name="secondthing", StringValue="melast", Type=ElementType.StaticValue}
 			};
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				Value = elementList,
+				ElementListValue = elementList,
 				Type = ElementType.ElementList
 			}
 			);
@@ -135,13 +135,13 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "prefix",
-				Value = "firstpart",
+				StringValue = "firstpart",
 				Type = ElementType.StaticValue
 			});
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "optionalpostfix",
-				Value = "secondoption",
+				ElementValue = new SchemaElement() { Name = "secondoption", StringValue = "secondoption", Type = ElementType.StaticValue },
 				Type = ElementType.Optional
 			});
 
@@ -175,13 +175,13 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "prefix",
-				Value = "firstpart",
+				StringValue = "firstpart",
 				Type = ElementType.StaticValue
 			});
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "optionalpostfix",
-				Value = "secondoption",
+				ElementValue = new SchemaElement() { Name="secondoption", StringValue = "secondoption", Type=ElementType.StaticValue},
 				Type = ElementType.Optional
 			});
 
@@ -199,27 +199,27 @@ namespace datatools.datamaker.tests
 
 			SchemaElement[] elementList = new SchemaElement[] 
 			{
-				new SchemaElement() { Name="optfirst", Value="optionallyfirst", Type=ElementType.StaticValue},
-				new SchemaElement() { Name="optsecond", Value="optionallysecond", Type=ElementType.StaticValue}
+				new SchemaElement() { Name="optfirst", StringValue="optionallyfirst", Type=ElementType.StaticValue},
+				new SchemaElement() { Name="optsecond", StringValue="optionallysecond", Type=ElementType.StaticValue}
 			};
 
 			SchemaElement optionElement = new SchemaElement()
 			{
 				Name = "optional",
-				Value = elementList,
+				ElementValue = new SchemaElement() { Name="listthing", ElementListValue=elementList, Type=ElementType.ElementList},
 				Type = ElementType.Optional
 			};
 
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "prefix",
-				Value = "firstpart",
+				StringValue = "firstpart",
 				Type = ElementType.StaticValue
 			});
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "optionalpostfix",
-				Value = optionElement,
+				ElementValue = optionElement,
 				Type = ElementType.Optional
 			});
 
@@ -252,8 +252,8 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				MinValue = 'a',
-				MaxValue = 'z',
+				AlphaMinValue = 'a',
+				AlphaMaxValue = 'z',
 				Type = ElementType.RangeAlpha
 			}
 			);
@@ -275,8 +275,8 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				MinValue = 3,
-				MaxValue = 5,
+				NumericMinValue = 3,
+				NumericMaxValue = 5,
 				Type = ElementType.RangeNumeric
 			}
 			);
@@ -309,8 +309,8 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				MinValue = 3,
-				MaxValue = 5,
+				NumericMinValue = 3,
+				NumericMaxValue = 5,
 				Type = ElementType.RangeNumeric
 			}
 			);
@@ -333,8 +333,8 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				MinValue = 3,
-				MaxValue = 2,
+				NumericMinValue = 3,
+				NumericMaxValue = 2,
 				Type = ElementType.RangeNumeric
 			}
 			);
@@ -350,7 +350,7 @@ namespace datatools.datamaker.tests
 			{
 				passedInReference = d;
 				DataSchema dataSchema = new DataSchema() { };
-				dataSchema.AddElement(new SchemaElement() { Name = "referencedme", Value = "this is me", Type = ElementType.StaticValue });
+				dataSchema.AddElement(new SchemaElement() { Name = "referencedme", StringValue = "this is me", Type = ElementType.StaticValue });
 				return dataSchema;
 			};
 			MockChooser mockChooser = new MockChooser();
@@ -358,7 +358,7 @@ namespace datatools.datamaker.tests
 			SchemaElement schemaElement = new SchemaElement()
 			{
 				Name="testelem",
-				Value = new DataSchemaReference() { Name="testref", NameSpace="test.namespace"},
+				RefValue = new DataSchemaReference() { Name="testref", NameSpace="test.namespace"},
 				Type = ElementType.Reference
 			};
 			DataSchema inputSchema = new DataSchema();
@@ -373,7 +373,7 @@ namespace datatools.datamaker.tests
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentException))]
-		public void GetExample_reference_notdataschemareference_in_value()
+		public void GetExample_reference_null()
 		{
 			MockSchemaStore schemaStore = new MockSchemaStore();
 			MockChooser mockChooser = new MockChooser();
@@ -381,7 +381,7 @@ namespace datatools.datamaker.tests
 			SchemaElement schemaElement = new SchemaElement()
 			{
 				Name = "testelem",
-				Value = "not a reference",
+				RefValue = null,
 				Type = ElementType.Reference
 			};
 			DataSchema inputSchema = new DataSchema();
@@ -396,7 +396,7 @@ namespace datatools.datamaker.tests
 			SchemaElement schemaElement = new SchemaElement()
 			{
 				Name = "testelem",
-				Value = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
+				RefValue = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
 				Type = ElementType.Reference
 			};
 			MockSchemaStore schemaStore = new MockSchemaStore();
@@ -405,7 +405,7 @@ namespace datatools.datamaker.tests
 				SchemaElement schemaElement2 = new SchemaElement()
 				{
 					Name = "testelem",
-					Value = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
+					RefValue = new DataSchemaReference() { Name = "testref", NameSpace = "test.namespace" },
 					Type = ElementType.Reference
 				};
 				DataSchema dataSchema = new DataSchema() { };
@@ -425,7 +425,7 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement() 
 			{
 				Name = "element1",
-				Value = "val1",
+				StringValue = "val1",
 				Type = ElementType.StaticValue
 			}
 			);
@@ -442,14 +442,14 @@ namespace datatools.datamaker.tests
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element1",
-				Value = "val1",
+				StringValue = "val1",
 				Type = ElementType.StaticValue
 			}
 			);
 			schema.AddElement(new SchemaElement()
 			{
 				Name = "element2",
-				Value = "val2",
+				StringValue = "val2",
 				Type = ElementType.StaticValue
 			}
 			);

@@ -47,7 +47,7 @@ namespace datatools.datamaker.providers.tests
 		public void AddSchema()
 		{
 			DataSchema dataSchema = new DataSchema() { SchemaName="testschema"};
-			dataSchema.AddElement(new SchemaElement() { Name = "testelement", Type = ElementType.StaticValue, Value = "testvalue" });
+			dataSchema.AddElement(new SchemaElement() { Name = "testelement", Type = ElementType.StaticValue, StringValue = "testvalue" });
 
 			const string SchemaFilePath = "testschemafile.txt";
 			FileBasedSchemaStore store = new FileBasedSchemaStore(SchemaFilePath);

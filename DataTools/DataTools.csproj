@@ -8,8 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\datatools.datamaker.providers\datatools.datamaker.providers.csproj" />
     <ProjectReference Include="..\datatools.datamaker\datatools.datamaker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="datatoolsschema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

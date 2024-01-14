@@ -21,11 +21,11 @@ namespace datatools.datamaker.tests
 		{
 			SchemaElement[] elements = new SchemaElement[] 
 			{
-				new SchemaElement () { Name="elem1", Value="val1", Type = ElementType.StaticValue},
-				new SchemaElement () { Name="elem2", Value= new DataSchemaReference() { Name="ref1", NameSpace="name.space1"}, Type=ElementType.Reference }
+				new SchemaElement () { Name="elem1", StringValue="val1", Type = ElementType.StaticValue},
+				new SchemaElement () { Name="elem2", RefValue= new DataSchemaReference() { Name="ref1", NameSpace="name.space1"}, Type=ElementType.Reference }
 			};
 			DataSchema dataSchema = new DataSchema();
-			dataSchema.AddElement(new SchemaElement() { Name = "testelem", Value = elements, Type = ElementType.ElementList });
+			dataSchema.AddElement(new SchemaElement() { Name = "testelem", ElementListValue = elements, Type = ElementType.ElementList });
 
 			DataSchemaAssessment assessment = DataSchema.AssessSchema(dataSchema);
 			Assert.AreEqual(false, assessment.FullyTerminating, "Fail if the schema is fully terminating.");
@@ -40,11 +40,11 @@ namespace datatools.datamaker.tests
 		{
 			SchemaElement[] elements = new SchemaElement[]
 			{
-				new SchemaElement () { Name="elem1", Value="val1", Type = ElementType.StaticValue},
-				new SchemaElement () { Name="elem2", Value= "val2", Type=ElementType.StaticValue }
+				new SchemaElement () { Name="elem1", StringValue="val1", Type = ElementType.StaticValue},
+				new SchemaElement () { Name="elem2", StringValue= "val2", Type=ElementType.StaticValue }
 			};
 			DataSchema dataSchema = new DataSchema();
-			dataSchema.AddElement(new SchemaElement() { Name = "testelem", Value = elements, Type = ElementType.ElementList });
+			dataSchema.AddElement(new SchemaElement() { Name = "testelem", ElementListValue = elements, Type = ElementType.ElementList });
 
 			DataSchemaAssessment assessment = DataSchema.AssessSchema(dataSchema);
 			Assert.AreEqual(true, assessment.FullyTerminating, "Fail if the schema is not fully terminating.");
@@ -58,7 +58,7 @@ namespace datatools.datamaker.tests
 		public void AssessSchema_reference()
 		{
 			DataSchema dataSchema = new DataSchema();
-			dataSchema.AddElement(new SchemaElement() { Name = "testelem", Value = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference });
+			dataSchema.AddElement(new SchemaElement() { Name = "testelem", RefValue = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference });
 
 			DataSchemaAssessment assessment = DataSchema.AssessSchema(dataSchema);
 			Assert.AreEqual(false, assessment.FullyTerminating, "Fail if the schema is fully terminating.");
@@ -72,7 +72,7 @@ namespace datatools.datamaker.tests
 		public void AssessSchema_staticvalue()
 		{
 			DataSchema dataSchema = new DataSchema();
-			dataSchema.AddElement(new SchemaElement() { Name = "testelem", Value = "value1", Type = ElementType.StaticValue });
+			dataSchema.AddElement(new SchemaElement() { Name = "testelem", StringValue = "value1", Type = ElementType.StaticValue });
 
 			DataSchemaAssessment assessment = DataSchema.AssessSchema(dataSchema);
 			Assert.AreEqual(true, assessment.FullyTerminating, "Fail if the schema is not fully terminating.");
@@ -87,11 +87,11 @@ namespace datatools.datamaker.tests
 		{
 			DataSchema dataSchema = new DataSchema();
 			SchemaElement refElement = new SchemaElement()
-			{ Name = "testelem", Value = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
+			{ Name = "testelem", RefValue = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
 			SchemaElement choiceElement = new SchemaElement()
 			{
 				Name = "choiceelem",
-				Value = new SchemaElement[] { refElement},
+				ElementListValue = new SchemaElement[] { refElement},
 				Type = ElementType.Choice
 			};
 			dataSchema.AddElement(
@@ -110,19 +110,19 @@ namespace datatools.datamaker.tests
 		{
 			DataSchema dataSchema = new DataSchema();
 			SchemaElement refElement = new SchemaElement()
-			{ Name = "testelem", Value = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
+			{ Name = "testelem", RefValue = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
 			SchemaElement choiceElement = new SchemaElement()
 			{
 				Name = "choiceelem",
-				Value = new SchemaElement[] { refElement },
+				ElementListValue = new SchemaElement[] { refElement },
 				Type = ElementType.Choice
 			};
 			SchemaElement refElement2 = new SchemaElement()
-			{ Name = "testelem2", Value = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
+			{ Name = "testelem2", RefValue = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
 			SchemaElement choiceElement2 = new SchemaElement()
 			{
 				Name = "choiceelem2",
-				Value = new SchemaElement[] { refElement2 },
+				ElementListValue = new SchemaElement[] { refElement2 },
 				Type = ElementType.Choice
 			};
 			dataSchema.AddElement(
@@ -143,19 +143,19 @@ namespace datatools.datamaker.tests
 		{
 			DataSchema dataSchema = new DataSchema();
 			SchemaElement static1 = new SchemaElement()
-			{ Name = "testelem1", Value = "val1", Type = ElementType.StaticValue };
+			{ Name = "testelem1", StringValue = "val1", Type = ElementType.StaticValue };
 			SchemaElement choiceElement = new SchemaElement()
 			{
 				Name = "choiceelem1",
-				Value = new SchemaElement[] { static1 },
+				ElementListValue = new SchemaElement[] { static1 },
 				Type = ElementType.Choice
 			};
 			SchemaElement static2 = new SchemaElement()
-			{ Name = "testelem1", Value = "val1", Type = ElementType.StaticValue };
+			{ Name = "testelem1", StringValue = "val1", Type = ElementType.StaticValue };
 			SchemaElement choiceElement2 = new SchemaElement()
 			{
 				Name = "choiceelem2",
-				Value = new SchemaElement[] { static2 },
+				ElementListValue = new SchemaElement[] { static2 },
 				Type = ElementType.Choice
 			};
 			dataSchema.AddElement(
@@ -178,15 +178,15 @@ namespace datatools.datamaker.tests
 			SchemaElement staticElement = new SchemaElement()
 			{
 				Name = "choiceelem1",
-				Value = "val1",
+				StringValue = "val1",
 				Type = ElementType.StaticValue
 			};
 			SchemaElement refElem = new SchemaElement()
-			{ Name = "testelem2", Value = new DataSchemaReference() { Name="ref1", NameSpace="name.space1" }, Type = ElementType.Reference };
+			{ Name = "testelem2", RefValue = new DataSchemaReference() { Name="ref1", NameSpace="name.space1" }, Type = ElementType.Reference };
 			SchemaElement choiceElement2 = new SchemaElement()
 			{
 				Name = "choiceelem2",
-				Value = new SchemaElement[] { refElem, staticElement },
+				ElementListValue = new SchemaElement[] { refElem, staticElement },
 				Type = ElementType.Choice
 			};
 			dataSchema.AddElement(
@@ -205,11 +205,11 @@ namespace datatools.datamaker.tests
 		{
 			DataSchema dataSchema = new DataSchema();
 			SchemaElement refElement = new SchemaElement()
-			{ Name = "testelem", Value = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
+			{ Name = "testelem", RefValue = new DataSchemaReference() { Name = "ref1", NameSpace = "name.space1" }, Type = ElementType.Reference };
 			SchemaElement optionalElement = new SchemaElement()
 			{
 				Name = "optionelem",
-				Value = refElement,
+				ElementValue = refElement,
 				Type = ElementType.Optional
 			};
 			dataSchema.AddElement(
@@ -228,11 +228,11 @@ namespace datatools.datamaker.tests
 		{
 			DataSchema dataSchema = new DataSchema();
 			SchemaElement static1 = new SchemaElement()
-			{ Name = "testelem", Value = "val1", Type = ElementType.StaticValue };
+			{ Name = "testelem", StringValue = "val1", Type = ElementType.StaticValue };
 			SchemaElement optionalElement = new SchemaElement()
 			{
 				Name = "staticelem",
-				Value = static1,
+				ElementValue = static1,
 				Type = ElementType.Optional
 			};
 			dataSchema.AddElement(

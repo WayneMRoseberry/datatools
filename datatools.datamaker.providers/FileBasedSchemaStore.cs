@@ -1,12 +1,11 @@
 ﻿using System.Text.Json;
-using System.Xml;
 
 namespace datatools.datamaker.providers
 {
 	public class FileBasedSchemaStore : ISchemaStore
 	{
 		private string _schemaFilePath;
-		private Dictionary<string, Dictionary<string, DataSchema>> _schemaDict = new Dictionary<string, Dictionary<string, DataSchema>>();
+		private SchemaCollection _schemaDict = new SchemaCollection();
 
 		public FileBasedSchemaStore(string schemaFilePath) 
 		{
@@ -14,7 +13,7 @@ namespace datatools.datamaker.providers
 			if(System.IO.File.Exists(_schemaFilePath))
 			{
 				var file = System.IO.File.ReadAllText(_schemaFilePath);
-				_schemaDict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, DataSchema>>>(file);
+				_schemaDict = System.Text.Json.JsonSerializer.Deserialize<SchemaCollection>(file);
 			}
 			else
 			{
@@ -30,11 +29,11 @@ namespace datatools.datamaker.providers
 
 		public void AddDataSchema(string nameSpace, DataSchema dataSchema)
 		{
-			if(!_schemaDict.ContainsKey(nameSpace))
+			if(!_schemaDict.Schemas.ContainsKey(nameSpace))
 			{
-				_schemaDict.Add(nameSpace, new Dictionary<string, DataSchema>());
+				_schemaDict.Schemas.Add(nameSpace, new Dictionary<string, DataSchema>());
 			}
-			var namespaceDict = _schemaDict[nameSpace];
+			var namespaceDict = _schemaDict.Schemas[nameSpace];
 			if(!namespaceDict.ContainsKey(dataSchema.SchemaName))
 			{
 				namespaceDict.Add(dataSchema.SchemaName, dataSchema);
@@ -48,7 +47,7 @@ namespace datatools.datamaker.providers
 
 		public DataSchema GetSchemaElement(DataSchemaReference schemaReference)
 		{
-			return _schemaDict[schemaReference.NameSpace][schemaReference.Name];
+			return _schemaDict.Schemas[schemaReference.NameSpace][schemaReference.Name];
 		}
 	}
 }

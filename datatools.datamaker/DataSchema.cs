@@ -4,7 +4,11 @@
 	{
 		public string SchemaName { get; set; }
 		private List<SchemaElement> elements = new List<SchemaElement>();
-		public IList<SchemaElement> Elements { get { return elements; } }
+		public IList<SchemaElement> Elements
+		{
+			get { return elements; }
+			set { elements.AddRange(value); }
+		}
 
 		public void AddElement(SchemaElement element) 
 		{
@@ -44,7 +48,7 @@
 			}
 			if (element.Type.Equals(ElementType.Choice))
 			{
-				SchemaElement[] elements = (SchemaElement[]) element.Value;
+				SchemaElement[] elements = element.ElementListValue;
 				int fullyTermCount = 0;
 				foreach(SchemaElement e in elements)
 				{
@@ -75,7 +79,7 @@
 			}
 			if (element.Type.Equals(ElementType.Optional))
 			{
-				DataSchemaAssessment elementAssessment = AssessSchemaElement(tempAssessment,(SchemaElement) element.Value);
+				DataSchemaAssessment elementAssessment = AssessSchemaElement(tempAssessment,(SchemaElement) element.ElementValue);
 				if (!elementAssessment.FullyTerminating)
 				{
 					tempAssessment.FullyTerminating = false;
@@ -84,7 +88,7 @@
 			}
 			if (element.Type.Equals(ElementType.ElementList))
 			{
-				SchemaElement[] elements = (SchemaElement[])element.Value;
+				SchemaElement[] elements = (SchemaElement[])element.ElementListValue;
 				foreach (SchemaElement e in elements)
 				{
 					DataSchemaAssessment elementAssessment = AssessSchemaElement(tempAssessment, e);
