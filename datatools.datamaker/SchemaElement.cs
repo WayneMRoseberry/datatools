@@ -90,4 +90,14 @@ namespace datatools.datamaker
 		Reference,
 		RangeAlpha
 	}
+
+	public class InvalidSchemaElementException : Exception
+	{
+		public string ElementName { get; private set; }
+
+		public InvalidSchemaElementException(string elementName)
+		{
+			ElementName = elementName;
+		}
+	}
 }

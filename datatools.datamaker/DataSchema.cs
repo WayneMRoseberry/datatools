@@ -12,7 +12,45 @@
 
 		public void AddElement(SchemaElement element) 
 		{
+			if(!SchemaElement.IsValidElement(element))
+			{
+				throw new ArgumentException("Schema element is invalid.");
+			}
 			this.elements.Add(element);
+		}
+
+		public static DataSchema LoadFromJson(string json)
+		{
+			DataSchema dataSchema = System.Text.Json.JsonSerializer.Deserialize<DataSchema>(json);
+
+			List<SchemaElement> elementList	= dataSchema.elements;
+			ThrowIfAnyElementsInListAreInvalid(elementList);
+
+			return dataSchema;
+		}
+
+		private static void ThrowIfAnyElementsInListAreInvalid(List<SchemaElement> elementList)
+		{
+			foreach (var element in elementList)
+			{
+				if (!SchemaElement.IsValidElement(element))
+				{
+					throw new InvalidSchemaElementException(element.Name);
+				}
+				if (element.Type == ElementType.Choice || element.Type == ElementType.ElementList)
+				{
+					ThrowIfAnyElementsInListAreInvalid(element.ElementListValue.ToList());
+				}
+				if (element.Type == ElementType.Optional)
+				{
+					ThrowIfAnyElementsInListAreInvalid(new List<SchemaElement>() { element.ElementValue });
+				}
+			}
+		}
+
+		public static string GetJsonFromSchema(DataSchema dataSchema)
+		{
+			return System.Text.Json.JsonSerializer.Serialize(dataSchema);
 		}
 
 		public static DataSchemaAssessment AssessSchema(DataSchema dataSchema)

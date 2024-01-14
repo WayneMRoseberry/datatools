@@ -1,7 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
-using NuGet.Frameworks;
-using System.Reflection.Metadata.Ecma335;
-
 namespace datatools.datamaker.tests
 {
 	[TestClass]
@@ -244,6 +240,81 @@ namespace datatools.datamaker.tests
 			Assert.AreEqual(false, assessment.HasRequiredSelfReference, "Fail if HasRequiredSelfReference is true.");
 			Assert.AreEqual(false, assessment.HasOptionalSelfReference, "Fail if HasOptionalSelfReferences is true.");
 			Assert.AreEqual(false, assessment.HasOptionalReferences, "Fail if HasOptionalReferences is true.");
+		}
+
+		[TestMethod]
+		public void GetJsonFromSchema_singlestatic()
+		{
+			DataSchema dataSchema = new DataSchema() { SchemaName = "testschema" };
+			SchemaElement element = new SchemaElement() { Name = "testelem", StringValue = "testval", Type = ElementType.StaticValue };
+			dataSchema.AddElement(element);
+			string json = DataSchema.GetJsonFromSchema(dataSchema);
+			DataSchema roundTripSchema = DataSchema.LoadFromJson(json);
+			SchemaElement roundTripElement = roundTripSchema.Elements[0];
+
+			Assert.AreEqual(dataSchema.SchemaName, roundTripSchema.SchemaName, "Fail if schema names do not match.");
+			Assert.AreEqual(element.Name, roundTripElement.Name, "Fail if first element name does not match.");
+			Assert.AreEqual(element.Type, roundTripElement.Type, "Fail if first element type does not match.");
+			Assert.AreEqual(element.StringValue, roundTripElement.StringValue, "Fail if first element stringvalue does not match.");
+		}
+
+		[TestMethod]
+		public void GetJsonFromSchema_rangenumeric()
+		{
+			DataSchema dataSchema = new DataSchema() { SchemaName = "testschema" };
+			SchemaElement element = new SchemaElement() { Name = "testelem", NumericMinValue = 10, NumericMaxValue=20, Type = ElementType.RangeNumeric };
+			dataSchema.AddElement(element);
+			string json = DataSchema.GetJsonFromSchema(dataSchema);
+			DataSchema roundTripSchema = DataSchema.LoadFromJson(json);
+			SchemaElement roundTripElement = roundTripSchema.Elements[0];
+
+			Assert.AreEqual(dataSchema.SchemaName, roundTripSchema.SchemaName, "Fail if schema names do not match.");
+			Assert.AreEqual(element.Name, roundTripElement.Name, "Fail if first element name does not match.");
+			Assert.AreEqual(element.Type, roundTripElement.Type, "Fail if first element type does not match.");
+			Assert.AreEqual(element.NumericMinValue, roundTripElement.NumericMinValue, "Fail if first element minvalue does not match.");
+			Assert.AreEqual(element.NumericMaxValue, roundTripElement.NumericMaxValue, "Fail if first element max does not match.");
+		}
+
+		[TestMethod]
+		public void GetJsonFromSchema_rangealpha()
+		{
+			DataSchema dataSchema = new DataSchema() { SchemaName = "testschema" };
+			SchemaElement element = new SchemaElement() { Name = "testelem", AlphaMinValue = 'l', AlphaMaxValue = 't', Type = ElementType.RangeAlpha };
+			dataSchema.AddElement(element);
+			string json = DataSchema.GetJsonFromSchema(dataSchema);
+			DataSchema roundTripSchema = DataSchema.LoadFromJson(json);
+			SchemaElement roundTripElement = roundTripSchema.Elements[0];
+
+			Assert.AreEqual(dataSchema.SchemaName, roundTripSchema.SchemaName, "Fail if schema names do not match.");
+			Assert.AreEqual(element.Name, roundTripElement.Name, "Fail if first element name does not match.");
+			Assert.AreEqual(element.Type, roundTripElement.Type, "Fail if first element type does not match.");
+			Assert.AreEqual(element.AlphaMinValue, roundTripElement.AlphaMinValue, "Fail if first element minvalue does not match.");
+			Assert.AreEqual(element.AlphaMaxValue, roundTripElement.AlphaMaxValue, "Fail if first element max does not match.");
+		}
+
+		[TestMethod]
+		public void LoadFromJson_minimalstaticvalue()
+		{
+			DataSchema dataSchema = DataSchema.LoadFromJson("{\"SchemaName\":\"testschema\",\"Elements\":[{\"Name\":\"testelem\",\"StringValue\":\"testval\",\"Type\":0}]}");
+			SchemaElement element = dataSchema.Elements[0];
+
+			Assert.AreEqual("testschema", dataSchema.SchemaName, "Fail if the schema name does not match.");
+			Assert.AreEqual("testelem", element.Name, "Fail if element name does not match.");
+			Assert.AreEqual("testval", element.StringValue, "Fail if stringvalue does not match.");
+			Assert.AreEqual(ElementType.StaticValue, element.Type, "Fail if element type does not match.");
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(InvalidSchemaElementException))]
+		public void LoadFromJson_minimalstaticvalue_nullvalue()
+		{
+			DataSchema dataSchema = DataSchema.LoadFromJson("{\"SchemaName\":\"testschema\",\"Elements\":[{\"Name\":\"testelem\",\"Type\":0}]}");
+			SchemaElement element = dataSchema.Elements[0];
+
+			Assert.AreEqual("testschema", dataSchema.SchemaName, "Fail if the schema name does not match.");
+			Assert.AreEqual("testelem", element.Name, "Fail if element name does not match.");
+			Assert.AreEqual("testval", element.StringValue, "Fail if stringvalue does not match.");
+			Assert.AreEqual(ElementType.StaticValue, element.Type, "Fail if element type does not match.");
 		}
 	}
 	
