@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datatools.datamaker", "..\d
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datatools.datamaker.tests", "..\datatools.datamaker.tests\datatools.datamaker.tests.csproj", "{3B52D692-E719-4B52-B4E2-F360BB73BEE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "datatools.datamaker.providers", "..\datatools.datamaker.providers\datatools.datamaker.providers.csproj", "{EF42D8D8-F68E-4D39-BDD1-4900C43E7C1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datatools.datamaker.providers", "..\datatools.datamaker.providers\datatools.datamaker.providers.csproj", "{EF42D8D8-F68E-4D39-BDD1-4900C43E7C1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "datatools.datamaker.providers.tests", "..\datatools.datamaker.providers.tests\datatools.datamaker.providers.tests.csproj", "{DE595801-94B8-4877-929A-278FAC5BE0EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "datatools.datamaker.providers.tests", "..\datatools.datamaker.providers.tests\datatools.datamaker.providers.tests.csproj", "{DE595801-94B8-4877-929A-278FAC5BE0EE}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "datatools.datamakerjs", "..\datatools.datamakerjs\datatools.datamakerjs.njsproj", "{86287EC3-2C93-42A9-9164-ABE960A44FB6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DE595801-94B8-4877-929A-278FAC5BE0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE595801-94B8-4877-929A-278FAC5BE0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE595801-94B8-4877-929A-278FAC5BE0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86287EC3-2C93-42A9-9164-ABE960A44FB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86287EC3-2C93-42A9-9164-ABE960A44FB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86287EC3-2C93-42A9-9164-ABE960A44FB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86287EC3-2C93-42A9-9164-ABE960A44FB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
