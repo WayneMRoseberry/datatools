@@ -36,6 +36,13 @@
     <Content Include=".eslintrc.json" />
     <Content Include="app.js" />
     <Content Include="datamakerlibs\commonschema.js" />
+    <Content Include="datamakerlibs\datamaker.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="test\datamakerunittests.js">
+      <SubType>Code</SubType>
+      <TestFramework>Jest</TestFramework>
+    </Content>
     <Content Include="routes\index.js" />
     <Content Include="routes\users.js" />
     <Content Include="package.json" />

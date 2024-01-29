@@ -5,8 +5,15 @@ const MUSTBESINGLECHARACTERERROR = "argument must be a single character";
 const NULLVALUEERROR = "value must not be null";
 const NONARRAYVALUEERROR = "value must be an array";
 
-class ChoiceSchemaObject {
+class SchemaObjectBase {
+    constructor(objectTypeName) {
+        this.ObjectTypeName = objectTypeName;
+    }
+}
+
+class ChoiceSchemaObject extends SchemaObjectBase {
     constructor(choiceArray) {
+        super("ChoiceSchemaObject");
         if(choiceArray == null) {
             throw NULLVALUEERROR;
         }
@@ -17,8 +24,9 @@ class ChoiceSchemaObject {
     }
 }
 
-class OptionalSchemaObject {
+class OptionalSchemaObject extends SchemaObjectBase {
     constructor(optionalValue) {
+        super("OptionalSchemaObject");
         if (optionalValue == null) {
             throw NULLVALUEERROR;
         }
@@ -27,8 +35,9 @@ class OptionalSchemaObject {
     }
 }
 
-class RangeAlphaSchemaObject {
+class RangeAlphaSchemaObject extends SchemaObjectBase {
     constructor(minAlpha, maxAlpha) {
+        super("RangeAlphaSchemaObject");
         if (minAlpha == null || maxAlpha == null) {
             throw NULLVALUEERROR;
         }
@@ -43,8 +52,9 @@ class RangeAlphaSchemaObject {
     }
 }
 
-class RangeNumericSchemaObject {
+class RangeNumericSchemaObject extends SchemaObjectBase {
     constructor(minNumeric, maxNumeric) {
+        super("RangeNumericSchemaObject");
         if (minNumeric == null || maxNumeric == null) {
             throw NULLVALUEERROR;
         }
@@ -56,8 +66,9 @@ class RangeNumericSchemaObject {
     }
 }
 
-class ReferenceSchemaObject {
+class ReferenceSchemaObject extends SchemaObjectBase {
     constructor(namespace, schemaname) {
+        super("ReferenceSchemaObject");
         if (namespace == null || schemaname == null) {
             throw NULLVALUEERROR;
         }
@@ -76,8 +87,16 @@ class SchemaDef {
     }
 }
 
-class SequenceSchemaObject {
+class SchemaExample {
+    constructor(schemaName, exampleValue) {
+        this.SchemaName = schemaName;
+        this.ExampleValue = exampleValue;
+    }
+}
+
+class SequenceSchemaObject extends SchemaObjectBase {
     constructor(sequenceArray) {
+        super("SequenceSchemaObject");
         if (sequenceArray == null) {
             throw NULLVALUEERROR;
         }
@@ -88,8 +107,9 @@ class SequenceSchemaObject {
     }
 }
 
-class StaticSchemaObject {
+class StaticSchemaObject extends SchemaObjectBase {
     constructor(value) {
+        super("StaticSchemaObject");
         this.StaticValue = value;
     }
 }
@@ -104,7 +124,7 @@ function toJson(schemaDef) {
 
 
 module.exports = {
-    ChoiceSchemaObject, OptionalSchemaObject, RangeAlphaSchemaObject, RangeNumericSchemaObject, ReferenceSchemaObject, SchemaDef, SequenceSchemaObject, StaticSchemaObject,
+    ChoiceSchemaObject, OptionalSchemaObject, RangeAlphaSchemaObject, RangeNumericSchemaObject, ReferenceSchemaObject, SchemaDef, SchemaExample, SequenceSchemaObject, StaticSchemaObject,
     loadSchemaDef, toJson,
     MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA, MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC, MUSTBESINGLECHARACTERERROR, NULLVALUEERROR, NONARRAYVALUEERROR
 };
