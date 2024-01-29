@@ -35,7 +35,7 @@
   <ItemGroup>
     <Content Include=".eslintrc.json" />
     <Content Include="app.js" />
-    <Content Include="commonschema.js" />
+    <Content Include="datamakerlibs\commonschema.js" />
     <Content Include="routes\index.js" />
     <Content Include="routes\users.js" />
     <Content Include="package.json" />
@@ -47,6 +47,7 @@
     <Content Include="views\error.pug" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="datamakerlibs\" />
     <Folder Include="test\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />

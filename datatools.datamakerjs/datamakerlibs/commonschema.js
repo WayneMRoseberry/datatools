@@ -94,8 +94,17 @@ class StaticSchemaObject {
     }
 }
 
+function loadSchemaDef(schemaJson) {
+    return JSON.parse(schemaJson);
+}
+
+function toJson(schemaDef) {
+    return JSON.stringify(schemaDef);
+}
+
 
 module.exports = {
     ChoiceSchemaObject, OptionalSchemaObject, RangeAlphaSchemaObject, RangeNumericSchemaObject, ReferenceSchemaObject, SchemaDef, SequenceSchemaObject, StaticSchemaObject,
+    loadSchemaDef, toJson,
     MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA, MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC, MUSTBESINGLECHARACTERERROR, NULLVALUEERROR, NONARRAYVALUEERROR
 };

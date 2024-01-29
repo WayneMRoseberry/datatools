@@ -1,4 +1,4 @@
-const CommonSchema = require('../commonschema');
+const CommonSchema = require('../datamakerlibs/commonschema');
 
 describe('commonschema suite ', function () {
     describe(':schemaobjects:', function () {
@@ -165,10 +165,44 @@ describe('commonschema suite ', function () {
     });
     describe(':schemadef:', function () {
         describe('schema def tests', function () {
+
+            test("loadSchema roundtrip static schema object", function () {
+
+                let staticObject = new CommonSchema.StaticSchemaObject("val1");
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject);
+                expect(schemaDef.RootSchemaObject.StaticValue).toEqual("val1");
+                let persistedSchemaDef = CommonSchema.toJson(schemaDef);
+                expect(!persistedSchemaDef || persistedSchemaDef.length === 0).toBeFalsy();
+                let loadedSchemaDef = CommonSchema.loadSchemaDef(persistedSchemaDef);
+                expect(loadedSchemaDef.RootSchemaObject.StaticValue).toEqual(schemaDef.RootSchemaObject.StaticValue);
+            });
+
+            test("loadSchema roundtrip nested sequence", function () {
+
+                let staticObject = new CommonSchema.StaticSchemaObject("val1");
+                let seqSchemaObject = new CommonSchema.SequenceSchemaObject([staticObject]);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqSchemaObject);
+                expect(schemaDef.RootSchemaObject.SequenceArray.length).toEqual(1);
+                expect(schemaDef.RootSchemaObject.SequenceArray[0].StaticValue).toEqual("val1");
+                let persistedSchemaDef = CommonSchema.toJson(schemaDef);
+                expect(!persistedSchemaDef || persistedSchemaDef.length === 0).toBeFalsy();
+                let loadedSchemaDef = CommonSchema.loadSchemaDef(persistedSchemaDef);
+                expect(loadedSchemaDef.RootSchemaObject.SequenceArray.length).toEqual(1);
+                expect(loadedSchemaDef.RootSchemaObject.SequenceArray[0].StaticValue).toEqual(schemaDef.RootSchemaObject.SequenceArray[0].StaticValue);
+            });
+            
             it("schemadef with StaticValue root", function () {
                 let staticObject = new CommonSchema.StaticSchemaObject("val1");
                 let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject);
                 expect(schemaDef.RootSchemaObject.StaticValue).toEqual("val1");
+            });
+
+            it("schemadef with SequenceSchemaObject root", function () {
+                let seqObject = new CommonSchema.SequenceSchemaObject(["val1","val2"]);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqObject);
+                expect(schemaDef.RootSchemaObject.SequenceArray.length).toEqual(2);
+                expect(schemaDef.RootSchemaObject.SequenceArray[0]).toEqual("val1");
+                expect(schemaDef.RootSchemaObject.SequenceArray[1]).toEqual("val2");
             });
 
             it("schemadef with null root", function () {
