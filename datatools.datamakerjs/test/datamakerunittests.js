@@ -1,5 +1,7 @@
 const CommonSchema = require('../datamakerlibs/commonschema');
 const DataMaker = require('../datamakerlibs/datamaker'); 
+const { DeciderMock } = require('./DeciderMock');
+const { ProviderMock } = require('./ProviderMock');
 describe('DataMaker test suite', function () {
 
     it("GetRandomExample ChoiceSchemaObject", function () {
@@ -8,16 +10,11 @@ describe('DataMaker test suite', function () {
 
         let passedInArray = null;
 
-        class deciderMock {
-            constructor() {
-                this.chooseItem = function (itemArray) {
-                    passedInArray = itemArray;
-                    return itemArray[0];
-                }
-            }
-        }
-
-        let mock = new deciderMock();
+        let mock = new DeciderMock();
+        mock.chooseItem = function (itemArray) {
+            passedInArray = itemArray;
+            return itemArray[0];
+        };
 
         let example = DataMaker.getRandomExample(null, mock, schemaDef);
         expect(passedInArray.length).toEqual(2);
@@ -40,16 +37,11 @@ describe('DataMaker test suite', function () {
 
         let passedInObject = null;
 
-        class deciderMock {
-            constructor() {
-                this.optionChosen = function (schemaObject) {
-                    passedInObject = schemaObject;
-                    return true;
-                }
-            }
-        }
-
-        let mock = new deciderMock();
+        let mock = new DeciderMock();
+        mock.optionChosen = function (schemaObject) {
+            passedInObject = schemaObject;
+            return true;
+        };
 
         let example = DataMaker.getRandomExample(null, mock, schemaDef);
         expect(passedInObject).toEqual("val1");
@@ -71,17 +63,12 @@ describe('DataMaker test suite', function () {
         let passedInMin = null;
         let passedInMax = null;
 
-        class deciderMock {
-            constructor() {
-                this.chooseAlphaRange = function (minAlpha,maxAlpha) {
-                    passedInMin = minAlpha;
-                    passedInMax = maxAlpha;
-                    return "b";
-                }
-            }
-        }
-
-        let mock = new deciderMock();
+        let mock = new DeciderMock();
+        mock.chooseAlphaRange = function (minAlpha, maxAlpha) {
+            passedInMin = minAlpha;
+            passedInMax = maxAlpha;
+            return "b";
+        };
 
         let example = DataMaker.getRandomExample(null, mock, schemaDef);
         expect(passedInMin).toEqual("a");
@@ -97,17 +84,12 @@ describe('DataMaker test suite', function () {
         let passedInMin = -1;
         let passedInMax = -1;
 
-        class deciderMock {
-            constructor() {
-                this.chooseNumericRange = function (minNumeric, maxNumeric) {
-                    passedInMin = minNumeric;
-                    passedInMax = maxNumeric;
-                    return 12;
-                }
-            }
-        }
-
-        let mock = new deciderMock();
+        let mock = new DeciderMock();
+        mock.chooseNumericRange = function (minNumeric, maxNumeric) {
+            passedInMin = minNumeric;
+            passedInMax = maxNumeric;
+            return 12;
+        };
 
         let example = DataMaker.getRandomExample(null, mock, schemaDef);
         expect(passedInMin).toEqual(1);
@@ -123,21 +105,15 @@ describe('DataMaker test suite', function () {
         let passedInNamespace = "";
         let passedInSchemaName = "";
 
-        class providerMock {
+        let mock = new ProviderMock();
+        mock.getSchemaDef = function (namespace, schemaName) {
+            passedInNamespace = namespace;
+            passedInSchemaName = schemaName;
 
-            constructor() {
-                this.getSchemaDef = function (namespace, schemaName) {
-                    passedInNamespace = namespace;
-                    passedInSchemaName = schemaName;
-
-                    let newSchemaObject = new CommonSchema.StaticSchemaObject("refval1");
-                    let refSchemaDef = new CommonSchema.SchemaDef("madeupname", newSchemaObject);
-                    return refSchemaDef;
-                };
-            }
-
+            let newSchemaObject = new CommonSchema.StaticSchemaObject("refval1");
+            let refSchemaDef = new CommonSchema.SchemaDef("madeupname", newSchemaObject);
+            return refSchemaDef;
         };
-        let mock = new providerMock();
 
         let example = DataMaker.getRandomExample(mock, null, testSchemaDef);
         expect(passedInNamespace).toEqual("namespace1");
@@ -171,3 +147,4 @@ describe('DataMaker test suite', function () {
     });
 
 });
+
