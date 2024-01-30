@@ -33,6 +33,16 @@ function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
                 }
                 break;
             }
+        case "RangeAlphaSchemaObject":
+            {
+                return decider.chooseAlphaRange(schemaObject.MinAlpha, schemaObject.MaxAlpha);
+                break;
+            }
+        case "RangeNumericSchemaObject":
+            {
+                return decider.chooseNumericRange(schemaObject.MinNumeric, schemaObject.MaxNumeric);
+                break;
+            }
         case "SequenceSchemaObject":
             {
                 for(const schemaItem of schemaObject.SequenceArray)

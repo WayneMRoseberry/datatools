@@ -64,11 +64,56 @@ describe('DataMaker test suite', function () {
 
     });
 
-    it("GetRandomExample StaticSchemaObject", function () {
-        let staticObject = new CommonSchema.StaticSchemaObject("val1");
-        let schemaDef =  new CommonSchema.SchemaDef("schemadef1", staticObject);
-        expect(DataMaker.getRandomExample(null, null, schemaDef).SchemaName).toEqual("schemadef1");
-        expect(DataMaker.getRandomExample(null, null, schemaDef).ExampleValue).toEqual("val1");
+    it("GetRandomExample RangeAlphaSchemaObject", function () {
+        let rangeAlphaSchemaObject = new CommonSchema.RangeAlphaSchemaObject("a","z");
+        let schemaDef = new CommonSchema.SchemaDef("schemadef1", rangeAlphaSchemaObject);
+
+        let passedInMin = null;
+        let passedInMax = null;
+
+        class deciderMock {
+            constructor() {
+                this.chooseAlphaRange = function (minAlpha,maxAlpha) {
+                    passedInMin = minAlpha;
+                    passedInMax = maxAlpha;
+                    return "b";
+                }
+            }
+        }
+
+        let mock = new deciderMock();
+
+        let example = DataMaker.getRandomExample(null, mock, schemaDef);
+        expect(passedInMin).toEqual("a");
+        expect(passedInMax).toEqual("z");
+        expect(example.SchemaName).toEqual("schemadef1");
+        expect(example.ExampleValue).toEqual("b");
+    });
+
+    it("GetRandomExample RangeNumericSchemaObject", function () {
+        let rangeNumericSchemaObject = new CommonSchema.RangeNumericSchemaObject(1, 100);
+        let schemaDef = new CommonSchema.SchemaDef("schemadef1", rangeNumericSchemaObject);
+
+        let passedInMin = -1;
+        let passedInMax = -1;
+
+        class deciderMock {
+            constructor() {
+                this.chooseNumericRange = function (minNumeric, maxNumeric) {
+                    passedInMin = minNumeric;
+                    passedInMax = maxNumeric;
+                    return 12;
+                }
+            }
+        }
+
+        let mock = new deciderMock();
+
+        let example = DataMaker.getRandomExample(null, mock, schemaDef);
+        expect(passedInMin).toEqual(1);
+        expect(passedInMax).toEqual(100);
+        expect(example.SchemaName).toEqual("schemadef1");
+        expect(example.ExampleValue).toEqual(12);
     });
 
     it("GetRandomExample ReferenceSchemaObject", function () {
@@ -107,6 +152,13 @@ describe('DataMaker test suite', function () {
         let example = DataMaker.getRandomExample(null, null, schemaDef);
         expect(example.SchemaName).toEqual("schemadef1");
         expect(example.ExampleValue).toEqual("val1val2");
+    });
+
+    it("GetRandomExample StaticSchemaObject", function () {
+        let staticObject = new CommonSchema.StaticSchemaObject("val1");
+        let schemaDef =  new CommonSchema.SchemaDef("schemadef1", staticObject);
+        expect(DataMaker.getRandomExample(null, null, schemaDef).SchemaName).toEqual("schemadef1");
+        expect(DataMaker.getRandomExample(null, null, schemaDef).ExampleValue).toEqual("val1");
     });
 
     it("GetRandomExample TwoDeepSequenceSchemaObject", function () {
