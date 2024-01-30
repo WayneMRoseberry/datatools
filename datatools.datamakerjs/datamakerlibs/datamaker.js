@@ -16,12 +16,26 @@ function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
     switch (schemaObject.ObjectTypeName) {
         case "SequenceSchemaObject":
             {
-                randomValue = schemaObject.SequenceArray.join("");
+                for(const schemaItem of schemaObject.SequenceArray)
+                {
+                    randomValue = randomValue + evaluateSchemaObject(schemaProvider, decider, schemaItem);
+                }
                 break;
             }
         case "StaticSchemaObject":
             {
                 randomValue = schemaObject.StaticValue;
+                break;
+            }
+        case "ReferenceSchemaObject":
+            {
+                let schemaDef = schemaProvider.getSchemaDef(schemaObject.Namespace, schemaObject.SchemaName);
+                randomValue = evaluateSchemaObject(schemaProvider, decider, schemaDef.RootSchemaObject);
+                break;
+            }
+        default:
+            {
+                randomValue = schemaObject;
                 break;
             }
     }
