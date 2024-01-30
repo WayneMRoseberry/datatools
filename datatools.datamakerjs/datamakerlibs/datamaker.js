@@ -11,9 +11,28 @@ function getRandomExample(schemaProvider, decider, schemaDef) {
 module.exports = { getRandomExample};
 
 function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
+    if (typeof schemaObject == 'undefined') {
+        throw "cannot evaluate null schemaObject";
+    }
     let randomValue = "";
-
-    switch (schemaObject.ObjectTypeName) {
+    let typeName = "";
+    if (typeof schemaObject.ObjectTypeName != 'undefined') {
+        typeName = schemaObject.ObjectTypeName;
+    }
+    switch (typeName) {
+        case "ChoiceSchemaObject":
+            {
+                let chosen = decider.chooseItem(schemaObject.ChoiceArray);
+                randomValue = evaluateSchemaObject(schemaProvider, decider, chosen);
+                break;
+            }
+        case "OptionalSchemaObject":
+            {
+                if (decider.optionChosen(schemaObject.OptionalValue)) {
+                    randomValue = evaluateSchemaObject(schemaProvider, decider, schemaObject.OptionalValue);
+                }
+                break;
+            }
         case "SequenceSchemaObject":
             {
                 for(const schemaItem of schemaObject.SequenceArray)
