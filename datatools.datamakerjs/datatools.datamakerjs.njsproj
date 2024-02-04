@@ -49,6 +49,8 @@
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
     <Content Include="test\commonschemaunittest.js" />
+    <Content Include="test\DeciderMock.js" />
+    <Content Include="test\ProviderMock.js" />
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
     <Content Include="views\error.pug" />
