@@ -169,7 +169,7 @@ describe('commonschema suite ', function () {
             test("loadSchema roundtrip static schema object", function () {
 
                 let staticObject = new CommonSchema.StaticSchemaObject("val1");
-                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject, "testnamespace");
                 expect(schemaDef.RootSchemaObject.StaticValue).toEqual("val1");
                 let persistedSchemaDef = CommonSchema.toJson(schemaDef);
                 expect(!persistedSchemaDef || persistedSchemaDef.length === 0).toBeFalsy();
@@ -181,7 +181,7 @@ describe('commonschema suite ', function () {
 
                 let staticObject = new CommonSchema.StaticSchemaObject("val1");
                 let seqSchemaObject = new CommonSchema.SequenceSchemaObject([staticObject]);
-                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqSchemaObject);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqSchemaObject, "testnamespace");
                 expect(schemaDef.RootSchemaObject.SequenceArray.length).toEqual(1);
                 expect(schemaDef.RootSchemaObject.SequenceArray[0].StaticValue).toEqual("val1");
                 let persistedSchemaDef = CommonSchema.toJson(schemaDef);
@@ -193,13 +193,13 @@ describe('commonschema suite ', function () {
             
             it("schemadef with StaticValue root", function () {
                 let staticObject = new CommonSchema.StaticSchemaObject("val1");
-                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", staticObject, "testnamespace");
                 expect(schemaDef.RootSchemaObject.StaticValue).toEqual("val1");
             });
 
             it("schemadef with SequenceSchemaObject root", function () {
                 let seqObject = new CommonSchema.SequenceSchemaObject(["val1","val2"]);
-                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqObject);
+                let schemaDef = new CommonSchema.SchemaDef("schemaDef1", seqObject, "testnamespace");
                 expect(schemaDef.RootSchemaObject.SequenceArray.length).toEqual(2);
                 expect(schemaDef.RootSchemaObject.SequenceArray[0]).toEqual("val1");
                 expect(schemaDef.RootSchemaObject.SequenceArray[1]).toEqual("val2");
