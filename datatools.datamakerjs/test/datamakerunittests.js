@@ -157,6 +157,15 @@ describe('DataMaker test suite', function () {
             expect(DataMaker.schemaHasInfiniteLoop(new ProviderMock(), "testnamespace", schemaDef)).toEqual(true);
         });
 
+        it('optional self-reference', function () {
+            var schemaRef = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema");
+            expect(schemaRef.Namespace).toEqual("testnamespace");
+            var optObject = new CommonSchema.OptionalSchemaObject(schemaRef);
+            var schemaDef = new CommonSchema.SchemaDef("testschema", optObject);
+            expect(schemaDef.SchemaName).toEqual("testschema");
+            expect(DataMaker.schemaHasInfiniteLoop(new ProviderMock(), "testnamespace", schemaDef)).toEqual(false);
+        });
+
         it('root is reference to 2nd schema that references 1st schema', function () {
             var schemaRef = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema2");
             var schemaDef = new CommonSchema.SchemaDef("testschema1", schemaRef);
@@ -244,6 +253,33 @@ describe('DataMaker test suite', function () {
         it('root is reference to 2nd schema that references itself', function () {
             var schemaRef = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema2");
             var schemaDef = new CommonSchema.SchemaDef("testschema1", schemaRef);
+            var mock = new ProviderMock();
+            var passedInNamespace = "";
+            var passedInSchemaName = "";
+            var callCtr = 0;
+
+            mock.getSchemaDef = function (namespace, schemaName) {
+                callCtr++;
+                passedInNamespace = namespace;
+                passedInSchemaName = schemaName;
+
+                var schemaRef2 = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema2");
+                var schemaDef2 = new CommonSchema.SchemaDef("testschema2", schemaRef2);
+                return schemaDef2;
+            };
+
+            expect(DataMaker.schemaHasInfiniteLoop(mock, "testnamespace", schemaDef)).toEqual(true);
+            expect(passedInNamespace).toEqual("testnamespace");
+            expect(passedInSchemaName).toEqual("testschema2");
+            expect(callCtr).toEqual(1);
+        });
+
+
+
+        it('optional reference to 2nd schema that references itself', function () {
+            var schemaRef = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema2");
+            var optObject = new CommonSchema.OptionalSchemaObject(schemaRef);
+            var schemaDef = new CommonSchema.SchemaDef("testschema1", optObject);
             var mock = new ProviderMock();
             var passedInNamespace = "";
             var passedInSchemaName = "";

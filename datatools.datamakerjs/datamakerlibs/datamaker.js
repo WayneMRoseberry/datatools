@@ -1,7 +1,11 @@
 'use strict';
 const CommonSchema = require('./commonschema');
-
+const EXTERNALSCHEMAINFINITELOOPDETECTED = "external schema has infinite loop";
+const SCHEMAHASINFINITELOOP = "schema has infinite loop";
 function getRandomExample(schemaProvider, decider, schemaDef) {
+    if (schemaHasInfiniteLoop(schemaProvider, schemaDef.Namespace, schemaDef)) {
+        throw SCHEMAHASINFINITELOOP;
+    }
     let root = schemaDef.RootSchemaObject;
     let randomValue = evaluateSchemaObject(schemaProvider, decider, root);
 
@@ -90,7 +94,6 @@ function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
     return randomValue;
 }
 
-const EXTERNALSCHEMAINFINITELOOPDETECTED = "external schema has infinite loop";
 function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject, seenAlreadyArray) {
 
     console.log(` schemaObjectHasInfiniteLoop, schemaDefName: ${schemaDefName}, schemaObject.SchemaName:${schemaObject.SchemaName}`);
@@ -151,7 +154,7 @@ function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject
                 // on throw detecting infinite loops in external schema objects to catch external
                 // case, otherwise always returning true.
                 schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject.OptionalValue, seenAlreadyArray);
-                return true;
+                return false;
             }
     }
     return false;

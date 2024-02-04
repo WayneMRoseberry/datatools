@@ -78,12 +78,13 @@ class ReferenceSchemaObject extends SchemaObjectBase {
 }
 
 class SchemaDef {
-    constructor(schemaName, rootSchemaObject) {
+    constructor(schemaName, rootSchemaObject, namespace) {
         if (schemaName == null || rootSchemaObject == null) {
             throw NULLVALUEERROR;
         }
         this.SchemaName = schemaName;
         this.RootSchemaObject = rootSchemaObject;
+        this.Namespace = namespace;
     }
 }
 
