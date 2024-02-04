@@ -8,7 +8,26 @@ function getRandomExample(schemaProvider, decider, schemaDef) {
     return new CommonSchema.SchemaExample(schemaDef.SchemaName, randomValue);
 }
 
-module.exports = { getRandomExample};
+function schemaHasInfiniteLoop(schemaProvider,namespace, schemaDef, seenAlreadyArray) {
+    try {
+        if (typeof seenAlreadyArray == 'undefined') {
+            seenAlreadyArray = [];
+        }
+
+        var seenAlreadylabel = `${namespace}_${schemaDef.SchemaName}`;
+        seenAlreadyArray.push(seenAlreadylabel);
+
+        return schemaObjectHasInfiniteLoop(schemaProvider, schemaDef.SchemaName, schemaDef.RootSchemaObject, seenAlreadyArray);
+    }
+    catch (err) {
+        if (err == EXTERNALSCHEMAINFINITELOOPDETECTED) {
+            return true;
+        }
+        throw err;
+    }
+};
+
+module.exports = { getRandomExample, schemaHasInfiniteLoop};
 
 function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
     if (typeof schemaObject == 'undefined') {
@@ -69,4 +88,71 @@ function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
             }
     }
     return randomValue;
+}
+
+const EXTERNALSCHEMAINFINITELOOPDETECTED = "external schema has infinite loop";
+function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject, seenAlreadyArray) {
+
+    console.log(` schemaObjectHasInfiniteLoop, schemaDefName: ${schemaDefName}, schemaObject.SchemaName:${schemaObject.SchemaName}`);
+
+    let typeName = "";
+    if (typeof schemaObject != 'undefined' && typeof schemaObject.ObjectTypeName != 'undefined') {
+        typeName = schemaObject.ObjectTypeName;
+    }
+    switch (typeName) {
+        case 'ReferenceSchemaObject':
+            {
+                var seenAlreadylabel = `${schemaObject.Namespace}_${schemaObject.SchemaName}`;
+                if (schemaObject.SchemaName == schemaDefName) {
+                    return true;
+                }
+                if (seenAlreadyArray.includes(seenAlreadylabel)) {
+                    return true;
+                }
+
+                var refDef = schemaProvider.getSchemaDef(schemaObject.Namespace, schemaObject.SchemaName);
+
+                if (!seenAlreadyArray.includes(seenAlreadylabel)) {
+                    console.log(`   schemaObjectHasInfiniteLoop, Have not seen schema ${seenAlreadylabel} yet, examining for infinite loops.`);
+                    if (schemaHasInfiniteLoop(schemaProvider, schemaObject.Namespace, refDef, seenAlreadyArray.map((x) => x))) {
+                        throw EXTERNALSCHEMAINFINITELOOPDETECTED;
+                    }
+                }
+                seenAlreadyArray.push(seenAlreadylabel);
+                var res = schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, refDef.RootSchemaObject, seenAlreadyArray);
+
+                return res;
+                break;
+            }
+        case 'SequenceSchemaObject':
+            {
+                for(const childObject of schemaObject.SequenceArray)
+                {
+                    if (schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, childObject, seenAlreadyArray)) {
+                        return true;
+                    }
+                }
+                break;
+            }
+        case 'ChoiceSchemaObject':
+            {
+                for (const childObject of schemaObject.ChoiceArray) {
+                    if (!schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, childObject, seenAlreadyArray)) {
+                        return false;
+                    }
+                }
+                return true;;
+                break;
+            }
+        case 'OptionalSchemaObject':
+            {
+                // evaluating in there are loops, but other than external schema objects looping
+                // on themselves, all self-references below an option are escapable. Relying
+                // on throw detecting infinite loops in external schema objects to catch external
+                // case, otherwise always returning true.
+                schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject.OptionalValue, seenAlreadyArray);
+                return true;
+            }
+    }
+    return false;
 }
