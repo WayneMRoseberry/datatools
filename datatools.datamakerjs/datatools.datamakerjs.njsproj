@@ -39,6 +39,8 @@
     <Content Include="datamakerlibs\datamaker.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="datamakerlibs\randomDecider.js" />
+    <Content Include="datamakerlibs\fileBasedSchemaProvider.js" />
     <Content Include="test\datamakerunittests.js">
       <SubType>Code</SubType>
       <TestFramework>Jest</TestFramework>
