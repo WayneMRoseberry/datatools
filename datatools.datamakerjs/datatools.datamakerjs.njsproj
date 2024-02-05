@@ -52,6 +52,10 @@
     <Content Include="README.md" />
     <Content Include="test\commonschemaunittest.js" />
     <Content Include="test\DeciderMock.js" />
+    <Content Include="test\filebasedschemaproviderunittests.js">
+      <SubType>Code</SubType>
+      <TestFramework>Jest</TestFramework>
+    </Content>
     <Content Include="test\ProviderMock.js" />
     <Content Include="test\randomdeciderunittests.js">
       <SubType>Code</SubType>
