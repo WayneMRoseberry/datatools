@@ -35,6 +35,9 @@
   <ItemGroup>
     <Content Include=".eslintrc.json" />
     <Content Include="app.js" />
+    <Content Include="pages\documentation.html">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="serviceconfig.js" />
     <Content Include="datamakerlibs\commonschema.js" />
     <Content Include="datamakerlibs\datamaker.js">
@@ -69,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="datamakerlibs\" />
+    <Folder Include="pages\" />
     <Folder Include="test\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />

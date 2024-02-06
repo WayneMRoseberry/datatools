@@ -7,7 +7,9 @@ router.get('/', function (req, res) {
     //res.render('index', { title: 'Express' });
 
     var content = '<html><body><br/><br/><a href="./api">a link to the page</a>';
-    content += '<br/><a href="./api/namespaces">all the namespaces</a></body></html>';
+    content += '<br/><a href="./api/namespaces">all the namespaces</a>';
+    content += '<br/><a href="./documentation">DataMaker Documentation</a>'
+    content += '</body ></html > ';
 
     res.send(content);
 });
