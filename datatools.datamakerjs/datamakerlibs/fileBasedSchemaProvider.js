@@ -14,6 +14,9 @@ class FileBasedSchemaProvider {
             if (schemaDef == null) {
                 throw NULLVALUEERROR;
             }
+
+            console.log(`addSchemaDef, namespace:${schemaDef.Namespace}, schemaname:${schemaDef.SchemaName}, schemaDef:${schemaDef}`);
+
             if (!Object.keys(this.schemaStore).includes(schemaDef.Namespace)) {
                 this.schemaStore[schemaDef.Namespace] = {};
             }

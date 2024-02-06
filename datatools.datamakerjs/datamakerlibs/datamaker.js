@@ -96,6 +96,10 @@ function evaluateSchemaObject(schemaProvider, decider, schemaObject) {
 
 function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject, seenAlreadyArray) {
 
+    if (typeof schemaObject == 'undefined') {
+        return false;
+    }
+
     console.log(` schemaObjectHasInfiniteLoop, schemaDefName: ${schemaDefName}, schemaObject.SchemaName:${schemaObject.SchemaName}`);
 
     let typeName = "";
@@ -131,7 +135,7 @@ function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject
             {
                 for(const childObject of schemaObject.SequenceArray)
                 {
-                    if (schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, childObject, seenAlreadyArray)) {
+                    if (schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, childObject, seenAlreadyArray.map((x) => x))) {
                         return true;
                     }
                 }

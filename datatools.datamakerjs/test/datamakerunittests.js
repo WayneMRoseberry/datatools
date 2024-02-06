@@ -157,6 +157,52 @@ describe('DataMaker test suite', function () {
             expect(DataMaker.schemaHasInfiniteLoop(new ProviderMock(), "testnamespace", schemaDef)).toEqual(true);
         });
 
+        it('root is sequence of choice of three range references', function () {
+            var alphalower = new CommonSchema.RangeAlphaSchemaObject("a", "z");
+            var alphalowerschemadef = new CommonSchema.SchemaDef("alphalower", alphalower, "baseobjects");
+            var alphaupper = new CommonSchema.RangeAlphaSchemaObject("A", "Z");
+            var alphaupperschemadef = new CommonSchema.SchemaDef("alphaupper", alphaupper, "baseobjects");            
+            var alhadigits = new CommonSchema.RangeNumericSchemaObject("0", "9");
+            var alphadigitsschemadef = new CommonSchema.SchemaDef("alphadigits", alhadigits, "baseobjects");
+            var alphalowerref = new CommonSchema.ReferenceSchemaObject("baseobjects", "alphalower");
+            var alphaupperref = new CommonSchema.ReferenceSchemaObject("baseobjects", "alphaupper");
+            var alphadigitsref = new CommonSchema.ReferenceSchemaObject("baseobjects", "alphadigits");
+            var alphanumericchar = new CommonSchema.ChoiceSchemaObject([alphalowerref, alphaupperref, alphadigitsref]);
+            var alphanumericchardef = new CommonSchema.SchemaDef("alphanumericchar", alphanumericchar, "baseobjects");
+
+            var eightcharalphanumeric = new CommonSchema.SequenceSchemaObject([alphanumericchardef, alphanumericchardef, alphanumericchardef, alphanumericchardef, alphanumericchardef, alphanumericchardef, alphanumericchardef, alphanumericchardef]);
+
+
+            var providerMock = new ProviderMock();
+            providerMock.getSchemaDef = function (schemaDef) {
+
+                switch (schemaDef.SchemaName) {
+                    case "alphalower":
+                        {
+                            return alphalowerschemadef;
+                            break;
+                        }
+                    case "alphaupper":
+                        {
+                            return alphaupperschemadef;
+                            break;
+                        }
+                    case "alphadigits":
+                        {
+                            return alphadigitsschemadef;
+                            break;
+                        }
+                    case "alphanumericchar":
+                        {
+                            return alphanumericchardef;
+                            break;
+                        }
+                }
+            };
+
+            expect(DataMaker.schemaHasInfiniteLoop(providerMock, "baseobjects", eightcharalphanumeric)).toEqual(false);
+        });
+
         it('optional self-reference', function () {
             var schemaRef = new CommonSchema.ReferenceSchemaObject("testnamespace", "testschema");
             expect(schemaRef.Namespace).toEqual("testnamespace");

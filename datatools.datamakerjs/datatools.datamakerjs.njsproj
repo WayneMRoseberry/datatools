@@ -35,12 +35,14 @@
   <ItemGroup>
     <Content Include=".eslintrc.json" />
     <Content Include="app.js" />
+    <Content Include="serviceconfig.js" />
     <Content Include="datamakerlibs\commonschema.js" />
     <Content Include="datamakerlibs\datamaker.js">
       <SubType>Code</SubType>
     </Content>
     <Content Include="datamakerlibs\randomDecider.js" />
     <Content Include="datamakerlibs\fileBasedSchemaProvider.js" />
+    <Content Include="routes\api.js" />
     <Content Include="test\datamakerunittests.js">
       <SubType>Code</SubType>
       <TestFramework>Jest</TestFramework>
