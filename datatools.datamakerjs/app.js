@@ -6,10 +6,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+const config = require('./serviceconfig');
 var api = require('./routes/api');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+api.configure(config);
 
 var app = express();
 

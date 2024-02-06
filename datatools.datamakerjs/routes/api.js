@@ -1,12 +1,16 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-const config = require('../serviceconfig');
 const CommonSchema = require('../datamakerlibs/commonschema');
 const Datamaker = require('../datamakerlibs/datamaker');
 
-var provider = config.getSchemaProvider();
-var decider = config.getDecider();
+var provider = null;
+var decider = null;
+
+router.configure = function (configsettings) {
+    provider = configsettings.getSchemaProvider();
+    decider = configsettings.getDecider();
+}
 
 /* GET home page. */
 router.get('/', function (req, res) {
