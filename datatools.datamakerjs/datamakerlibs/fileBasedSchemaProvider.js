@@ -11,7 +11,7 @@ class FileBasedSchemaProvider {
             this._storeFilePath = storeFilePath;
         }
         this.addSchemaDef = function (schemaDef) {
-            if (schemaDef == null) {
+            if (schemaDef == null || schemaDef.Namespace == null || schemaDef.SchemaName == null) {
                 throw NULLVALUEERROR;
             }
 
@@ -24,7 +24,11 @@ class FileBasedSchemaProvider {
             var schemaStoreContents = JSON.stringify(this.schemaStore);
             fs.writeFileSync(this._storeFilePath, schemaStoreContents);
         };
+
         this.getSchemaDef = function (namespace, schemaName) {
+            if (namespace == null || schemaName == null) {
+                throw NULLVALUEERROR;
+            }
             if (Object.keys(this.schemaStore).includes(namespace)) {
                 var nameslot = this.schemaStore[namespace];
                 if (Object.keys(nameslot).includes(schemaName)) {
@@ -37,17 +41,20 @@ class FileBasedSchemaProvider {
         this.Namespaces = function () { return Object.keys(this.schemaStore); };
 
         this.SchemaDefs = function (namespace) {
+            if (namespace == null) {
+                throw NULLVALUEERROR;
+            }
             if (Object.keys(this.schemaStore).includes(namespace)) {
                 return Object.keys(this.schemaStore[namespace]);
             }
             return [];
         };
 
-        var schemaStoreFileContenst = "";
+        var schemaStoreFileContents = "";
         if (fs.existsSync(this._storeFilePath)) {
-            schemaStoreFileContenst = fs.readFileSync(this._storeFilePath);
-            if (schemaStoreFileContenst.length != 0) {
-                this.schemaStore = JSON.parse(schemaStoreFileContenst);
+            schemaStoreFileContents = fs.readFileSync(this._storeFilePath);
+            if (schemaStoreFileContents.length != 0) {
+                this.schemaStore = JSON.parse(schemaStoreFileContents);
             }
         }
         else {

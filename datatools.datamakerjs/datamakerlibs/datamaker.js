@@ -3,9 +3,6 @@ const CommonSchema = require('./commonschema');
 const EXTERNALSCHEMAINFINITELOOPDETECTED = "external schema has infinite loop";
 const SCHEMAHASINFINITELOOP = "schema has infinite loop";
 function getRandomExample(schemaProvider, decider, schemaDef) {
-    if (schemaHasInfiniteLoop(schemaProvider, schemaDef.Namespace, schemaDef)) {
-        throw SCHEMAHASINFINITELOOP;
-    }
     let root = schemaDef.RootSchemaObject;
     let randomValue = evaluateSchemaObject(schemaProvider, decider, root);
 

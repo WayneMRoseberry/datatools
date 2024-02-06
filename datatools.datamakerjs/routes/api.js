@@ -27,8 +27,11 @@ router.get('/namespaces', function (req, res) {
     res.send(result);
 });
 router.get('/schemadefs', function (req, res) {
-    var hostBase = getBaseHostURL(req);
     var namespace = req.query.namespace;
+    if (namespace == null) {
+        throw CommonSchema.NULLVALUEERROR;
+    }
+    var hostBase = getBaseHostURL(req);
     console.log(`schemadefs namespace:${namespace}`);
     var result = [];
     var schemaDefs = provider.SchemaDefs(namespace);
@@ -46,6 +49,9 @@ router.get('/schemadefs', function (req, res) {
 router.get('/schemadef', function (req, res) {
     var namespace = req.query.namespace;
     var schemaname = req.query.schemaname;
+    if (namespace == null || schemaname == null) {
+        throw CommonSchema.NULLVALUEERROR;
+    }
     console.log(`schemadef namespace:${namespace}, schemaname:${schemaname}`);
     var schemaDef = provider.getSchemaDef(namespace, schemaname);
     res.send(schemaDef);
@@ -54,7 +60,13 @@ router.get('/schemadef', function (req, res) {
 router.post('/schemadef', function (req, res) {
     console.log('POST schemadef');
     console.log(` schemaDef:${JSON.parse(JSON.stringify(req.body))}`);
-    provider.addSchemaDef(JSON.parse(JSON.stringify(req.body)));
+
+    const schemaDef = JSON.parse(JSON.stringify(req.body));
+    if (Datamaker.schemaHasInfiniteLoop(provider, schemaDef.Namespace, schemaDef, [])) {
+        throw `schema has infinite loop`;
+    }
+
+    provider.addSchemaDef(schemaDef);
     res.send({});
 });
 
