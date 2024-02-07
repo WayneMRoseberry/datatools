@@ -1,5 +1,5 @@
 ﻿const fs = require('fs');
-const { NULLVALUEERROR } = require("./commonschema");
+const { NULLVALUEERROR, MUSTNOTBEWHITESPACEOREMPTY } = require("./commonschema");
 
 class FileBasedSchemaProvider {
 
@@ -28,6 +28,9 @@ class FileBasedSchemaProvider {
         this.getSchemaDef = function (namespace, schemaName) {
             if (namespace == null || schemaName == null) {
                 throw NULLVALUEERROR;
+            }
+            if (namespace == '' || namespace == ' ' || schemaName == '' || schemaName == '') {
+                throw MUSTNOTBEWHITESPACEOREMPTY;
             }
             if (Object.keys(this.schemaStore).includes(namespace)) {
                 var nameslot = this.schemaStore[namespace];

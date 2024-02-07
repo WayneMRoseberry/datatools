@@ -156,7 +156,40 @@ function schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject
                 // case, otherwise always returning true.
                 schemaObjectHasInfiniteLoop(schemaProvider, schemaDefName, schemaObject.OptionalValue, seenAlreadyArray);
                 return false;
+                break;
+            }
+        case 'RangeAlphaSchemaObject':
+            {
+                if (schemaObject.MinAlpha == null || schemaObject.MaxAlpha == null) {
+                    throw CommonSchema.NULLVALUEERROR;
+                }
+                if (stringIsSpaceOrEmpty(schemaObject.MinAlpha) || stringIsSpaceOrEmpty(schemaObject.MaxAlpha)) {
+                    throw CommonSchema.MUSTNOTBEWHITESPACEOREMPTY;
+                }
+                if (schemaObject.MaxAlpha < schemaObject.MinAlpha) {
+                    throw CommonSchema.MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA;
+                }
+                break;
+            }
+        case 'RangeNumericSchemaObject':
+            {
+                if (schemaObject.MinNumeric == null || schemaObject.MaxNumeric == null) {
+                    throw CommonSchema.NULLVALUEERROR;
+                }
+                if (schemaObject.MaxNumeric < schemaObject.MinNumeric) {
+                    throw CommonSchema.MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC;
+                }
+                break;
+            }
+        default:
+            {
+                throw `invalid SchemaObjectTypeName`;
+                break;
             }
     }
     return false;
+}
+
+function stringIsSpaceOrEmpty(min) {
+    return min == '' || min == '';
 }

@@ -25,9 +25,22 @@ router.get('/namespaces', function (req, res) {
 
     var namespaces = provider.Namespaces();
     var result = [];
-    for (const namespace of namespaces) {
-        result.push({name:namespace, schemadefs:`${hostBase}/api/schemadefs?namespace=${namespace}`});
+    try {
+        for (const namespace of namespaces) {
+            result.push({name:namespace, schemadefs:`${hostBase}/api/schemadefs?namespace=${namespace}`});
+        }
     }
+    catch (err) {
+        if (exceptionIsKnownInvalidSchemaConditions(err)) {
+            res.status(400);
+            result["error"] = `invalid schema: ${err}`;
+        }
+        else {
+            console.log(`error:${err}`);
+            throw err;
+        }
+    }
+
     res.send(result);
 });
 router.get('/schemadefs', function (req, res) {
@@ -38,14 +51,27 @@ router.get('/schemadefs', function (req, res) {
     var hostBase = getBaseHostURL(req);
     console.log(`schemadefs namespace:${namespace}`);
     var result = [];
-    var schemaDefs = provider.SchemaDefs(namespace);
-    for (const schemaDef of schemaDefs) {
-        result.push({
-            name: schemaDef,
-            namespace: namespace ,
-            definitionUrl: `${hostBase}/api/schemadef?namespace=${namespace}&schemaname=${schemaDef}`,
-            getRandomExample: `${hostBase}/api/schemadef/getrandomexample?namespace=${namespace}&schemaname=${schemaDef}&count=1`
-        });
+    try {
+
+        var schemaDefs = provider.SchemaDefs(namespace);
+        for (const schemaDef of schemaDefs) {
+            result.push({
+                name: schemaDef,
+                namespace: namespace ,
+                definitionUrl: buildSchemaDefUrl(hostBase, namespace, schemaDef),
+                getRandomExample: `${hostBase}/api/schemadef/getrandomexample?namespace=${namespace}&schemaname=${schemaDef}&count=1`
+            });
+        }
+    }
+    catch (err) {
+        if (exceptionIsKnownInvalidSchemaConditions(err)) {
+            res.status(400);
+            result["error"] = `invalid schema: ${err}`;
+        }
+        else {
+            console.log(`error:${err}`);
+            throw err;
+        }
     }
     res.send(result);
 });
@@ -53,25 +79,64 @@ router.get('/schemadefs', function (req, res) {
 router.get('/schemadef', function (req, res) {
     var namespace = req.query.namespace;
     var schemaname = req.query.schemaname;
-    if (namespace == null || schemaname == null) {
-        throw CommonSchema.NULLVALUEERROR;
+    var result = {};
+    try {
+        if (namespace == null || schemaname == null) {
+            throw CommonSchema.NULLVALUEERROR;
+        }
+        console.log(`schemadef namespace:${namespace}, schemaname:${schemaname}`);
+        var schemaDef = provider.getSchemaDef(namespace, schemaname);
+        result = schemaDef;
     }
-    console.log(`schemadef namespace:${namespace}, schemaname:${schemaname}`);
-    var schemaDef = provider.getSchemaDef(namespace, schemaname);
-    res.send(schemaDef);
+    catch (err) {
+        if (exceptionIsKnownInvalidSchemaConditions(err)) {
+            res.status(400);
+            result["error"] = `invalid schema: ${err}`;
+        }
+        else {
+            console.log(`error:${err}`);
+            throw err;
+        }
+    }
+    res.send(result);
 });
 
 router.post('/schemadef', function (req, res) {
     console.log('POST schemadef');
     console.log(` schemaDef:${JSON.parse(JSON.stringify(req.body))}`);
+    var response = {};
+    try {
+        const schemaDef = JSON.parse(JSON.stringify(req.body));
+        if (typeof schemaDef.Namespace != 'string' || typeof schemaDef.SchemaName != 'string') {
+            throw CommonSchema.MUSTBESTRING;
+        }
+        if (schemaDef.Namespace == ' ' || schemaDef.Namespace == '' || schemaDef.SchemaName == ' ' || schemaDef.SchemaName == '') {
+            throw CommonSchema.MUSTNOTBEWHITESPACEOREMPTY;
+        }
 
-    const schemaDef = JSON.parse(JSON.stringify(req.body));
-    if (Datamaker.schemaHasInfiniteLoop(provider, schemaDef.Namespace, schemaDef, [])) {
-        throw `schema has infinite loop`;
+        if (Datamaker.schemaHasInfiniteLoop(provider, schemaDef.Namespace, schemaDef, [])) {
+            throw `schema has infinite loop`;
+        }
+
+        provider.addSchemaDef(schemaDef);
+        var newlymadeschema = provider.getSchemaDef(schemaDef.Namespace, schemaDef.SchemaName);
+        response["SchemaDef"] = newlymadeschema;
+        response["SchemaDefUrl"] = buildSchemaDefUrl(getBaseHostURL(req), newlymadeschema.Namespace, newlymadeschema.SchemaName);
+    }
+    catch (err)
+    {
+        if (exceptionIsKnownInvalidSchemaConditions(err)) {
+            res.status(400);
+            response["error"] = `invalid schema: ${err}`;
+        }
+        else {
+            console.log(`error:${err}`);
+            throw err;
+        }
     }
 
-    provider.addSchemaDef(schemaDef);
-    res.send({});
+
+    res.send(response);
 });
 
 router.get('/schemadef/getrandomexample', function (req, res) {
@@ -82,18 +147,39 @@ router.get('/schemadef/getrandomexample', function (req, res) {
         count = Number(req.query.count);
     }
     console.log(`schemadef namespace:${namespace}, schemaname:${schemaname}`);
-    var schemaDef = provider.getSchemaDef(namespace, schemaname);
-
     var resultset = [];
-    for (var i = 0; i < count; i++) {
+    try {
+        var schemaDef = provider.getSchemaDef(namespace, schemaname);
 
-        var example = Datamaker.getRandomExample(provider, decider, schemaDef);
-        resultset.push(example);
+        for (var i = 0; i < count; i++) {
+
+            var example = Datamaker.getRandomExample(provider, decider, schemaDef);
+            resultset.push(example);
+        }
     }
+    catch (err) {
+        console.log(`error: ${err}`);
+        throw err;
+    }
+
     res.send(resultset);
 });
 
 module.exports = router;
+
+function exceptionIsKnownInvalidSchemaConditions(err) {
+    return err == `schema has infinite loop`
+        || err == `invalid SchemaObjectTypeName`
+        || err == CommonSchema.MUSTBESTRING
+        || err == CommonSchema.MUSTNOTBEWHITESPACEOREMPTY
+        || err == CommonSchema.NULLVALUEERROR
+        || err == CommonSchema.MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA
+        || err == CommonSchema.MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC;
+}
+
+function buildSchemaDefUrl(hostBase, namespace, schemaDef) {
+    return `${hostBase}/api/schemadef?namespace=${namespace}&schemaname=${schemaDef}`;
+}
 
 function getBaseHostURL(req) {
     const proxyHost = req.headers["x-forwarded-host"];

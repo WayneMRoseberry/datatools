@@ -2,8 +2,10 @@
 const MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA = "maxalpha must be equal to or larger than minalpha";
 const MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC = "maxnumeric must be equal to or larger than minnumeric";
 const MUSTBESINGLECHARACTERERROR = "argument must be a single character";
+const MUSTBESTRING = "argument must be a string";
 const NULLVALUEERROR = "value must not be null";
 const NONARRAYVALUEERROR = "value must be an array";
+const MUSTNOTBEWHITESPACEOREMPTY = "value must not be whitespace or empty";
 
 class SchemaObjectBase {
     constructor(objectTypeName) {
@@ -127,5 +129,5 @@ function toJson(schemaDef) {
 module.exports = {
     ChoiceSchemaObject, OptionalSchemaObject, RangeAlphaSchemaObject, RangeNumericSchemaObject, ReferenceSchemaObject, SchemaDef, SchemaExample, SequenceSchemaObject, StaticSchemaObject,
     loadSchemaDef, toJson,
-    MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA, MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC, MUSTBESINGLECHARACTERERROR, NULLVALUEERROR, NONARRAYVALUEERROR
+    MAXALPHMUSTBEGREATERTHANOREQUALTOMINALPHA, MAXNUMERICMUSTBEGREATERTHANOREQUALTOMINNUMERIC, MUSTBESINGLECHARACTERERROR, MUSTBESTRING, MUSTNOTBEWHITESPACEOREMPTY, NULLVALUEERROR, NONARRAYVALUEERROR
 };
